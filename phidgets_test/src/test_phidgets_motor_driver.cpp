@@ -24,7 +24,7 @@ int main()
     PhidgetMotorController motor_actuation_fr(SERIAL_NUMBER_2, PORT_1, MotorType::Actuation, +1);
     
     PhidgetMotorController* motors_drive[] = {&motor_drive_bl, &motor_drive_br, &motor_drive_fl, &motor_drive_fr};
-    PhidgetMotorController* motors_actuation[] = {&motor_drive_bl, &motor_drive_br, &motor_drive_fl, &motor_drive_fr};
+    PhidgetMotorController* motors_actuation[] = {&motor_actuation_bl, &motor_actuation_br, &motor_actuation_fl, &motor_actuation_fr};
 
     // Initialize all motors
     for (int i = 0; i < NUM_MOTORS; i++) {
