@@ -29,13 +29,20 @@ public:
     }
 
     void init() {
-        PhidgetBLDCMotor_create(&motor_);
-        Phidget_setDeviceSerialNumber(reinterpret_cast<PhidgetHandle>(motor_), serial_number_);
-        Phidget_setHubPort(reinterpret_cast<PhidgetHandle>(motor_), hub_port_);
-        Phidget_openWaitForAttachment(reinterpret_cast<PhidgetHandle>(motor_), 5000);
+        PhidgetReturnCode ret;
+        ret = PhidgetBLDCMotor_create(&motor_);
+        checkError(ret, "Failed to create BLDC motor");
+        ret = Phidget_setDeviceSerialNumber(reinterpret_cast<PhidgetHandle>(motor_), serial_number_);
+        checkError(ret, "Failed to set device serial number");
+        ret = Phidget_setHubPort(reinterpret_cast<PhidgetHandle>(motor_), hub_port_);
+        checkError(ret, "Failed to set hub port");
+        ret = Phidget_openWaitForAttachment(reinterpret_cast<PhidgetHandle>(motor_), 5000);
+        checkError(ret, "Failed to attach to motor");
 
-        PhidgetBLDCMotor_setRescaleFactor(motor_, config_.rescale_factor);
-        PhidgetBLDCMotor_setStallVelocity(motor_, config_.stall_velocity);
+        ret = PhidgetBLDCMotor_setStallVelocity(motor_, config_.stall_velocity);
+        checkError(ret, "Failed to set rescale factor");
+        ret = PhidgetBLDCMotor_setRescaleFactor(motor_, config_.rescale_factor);
+        checkError(ret, "Failed to set stall velocity");
     }
 
     void setVelocityDuty(double duty) {
@@ -45,38 +52,79 @@ public:
 
     void setVelocityRPM(double rpm) {
         double duty = clampDuty(rpmToDuty(rpm));
-        PhidgetBLDCMotor_setTargetVelocity(motor_, duty * motor_direction_);
+        PhidgetReturnCode ret = PhidgetBLDCMotor_setTargetVelocity(motor_, duty * motor_direction_);
+        checkError(ret, "Failed to set target velocity (RPM)");
     }
 
     void setVelocityRads(double rads_per_sec) {
         double duty = clampDuty(radsPerSecToDuty(rads_per_sec));
-        PhidgetBLDCMotor_setTargetVelocity(motor_, duty * motor_direction_);
+        PhidgetReturnCode ret = PhidgetBLDCMotor_setTargetVelocity(motor_, duty * motor_direction_);
+        checkError(ret, "Failed to set target velocity (rad/s)");
     }
 
     double getPositionDegs() {
         double pos;
-        PhidgetBLDCMotor_getPosition(motor_, &pos);
+        PhidgetReturnCode ret = PhidgetBLDCMotor_getPosition(motor_, &pos);
+        checkError(ret, "Failed to get position");
         return pos;
     }
 
     double getPositionRads() {
         double pos;
-        PhidgetBLDCMotor_getPosition(motor_, &pos);
+        PhidgetReturnCode ret = PhidgetBLDCMotor_getPosition(motor_, &pos);
+        checkError(ret, "Failed to get position");
         return degToRad(pos);
     }
 
     void cleanup() {
         if (!motor_) return;
-        PhidgetBLDCMotor_setTargetVelocity(motor_, 0.0);
-        Phidget_close(reinterpret_cast<PhidgetHandle>(motor_));
-        PhidgetBLDCMotor_delete(&motor_);
-        motor_ = nullptr;
+            // Don't throw from cleanup since it's called in destructor
+            // Just log errors or store them
+            PhidgetReturnCode ret;
+            
+            ret = PhidgetBLDCMotor_setTargetVelocity(motor_, 0.0);
+            if (ret != EPHIDGET_OK) {
+                // Log error but continue cleanup
+                fprintf(stderr, "Warning: Failed to stop motor during cleanup\n");
+            }
+            
+            ret = Phidget_close(reinterpret_cast<PhidgetHandle>(motor_));
+            if (ret != EPHIDGET_OK) {
+                fprintf(stderr, "Warning: Failed to close motor during cleanup\n");
+            }
+            
+            ret = PhidgetBLDCMotor_delete(&motor_);
+            if (ret != EPHIDGET_OK) {
+                fprintf(stderr, "Warning: Failed to delete motor handle during cleanup\n");
+            }
+            
+            motor_ = nullptr;
     }
 
 private:
+
     static constexpr double TWO_PI = 2.0 * M_PI;
     static constexpr double SECONDS_PER_MINUTE = 60.0;
     static constexpr double DEG_TO_RAD_FACTOR = M_PI / 180.0;
+
+    void checkError(PhidgetReturnCode ret, const std::string& context) {
+        if (ret != EPHIDGET_OK) {
+            PhidgetReturnCode errorCode;
+            const char* errorString;
+            char errorDetail[100];
+            size_t errorDetailLen = 100;
+            
+            Phidget_getLastError(&errorCode, &errorString, errorDetail, &errorDetailLen);
+            
+            std::string error_msg = context + " - Error (" + std::to_string(errorCode) + 
+                                   "): " + errorString;
+            if (errorDetailLen > 0) {
+                error_msg += " - " + std::string(errorDetail);
+            }
+            
+            throw std::runtime_error(error_msg);
+        }
+    }
 
     // Conversion helper functions
     double degToRad(double degrees) const {

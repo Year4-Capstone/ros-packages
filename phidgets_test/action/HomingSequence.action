@@ -1,0 +1,10 @@
+# Request
+float64 homing_speed  # Speed for homing movement (in RPM)
+---
+# Result
+bool[] success        # Array of 4 bools indicating if each leg homed successfully
+float64[] positions   # Final positions after homing
+---
+# Feedback
+uint8[] status       # Status for each leg (0=not started, 1=in progress, 2=completed, 3=failed)
+float64[] positions  # Current positions during homing
