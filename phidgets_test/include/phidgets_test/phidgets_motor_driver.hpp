@@ -76,6 +76,14 @@ public:
         return degToRad(pos);
     }
 
+    void resetPosition() {
+        double current_pos;
+        PhidgetReturnCode ret = PhidgetBLDCMotor_getPosition(motor_, &current_pos);
+        checkError(ret, "Failed to get position for reset");
+        ret = PhidgetBLDCMotor_addPositionOffset(motor_, -current_pos);
+        checkError(ret, "Failed to add position offset to reset position");
+    }
+
     void cleanup() {
         if (!motor_) return;
             // Don't throw from cleanup since it's called in destructor

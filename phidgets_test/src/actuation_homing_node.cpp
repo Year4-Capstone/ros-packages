@@ -169,6 +169,9 @@ private:
         // Stop motor
         motors_[index]->setVelocityRPM(0.0);
 
+        // Reset position to 0 after homing
+        motors_[index]->resetPosition();
+
         // Mark as completed
         feedback->status[index] = 2;  // 2 = completed
         goal_handle->publish_feedback(feedback);
