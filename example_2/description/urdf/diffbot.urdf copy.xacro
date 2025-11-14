@@ -30,6 +30,11 @@
     name="DiffBotSystem" 
     prefix="$(arg prefix)" 
     use_mock_hardware="$(arg use_mock_hardware)"/>
-
+  
+  <!-- Instantiate actuation system -->
+  <xacro:actuation_ros2_control 
+    name="ActuationSystem" 
+    prefix="$(arg prefix)" 
+    use_mock_hardware="$(arg use_mock_hardware)"/>
 
 </robot>

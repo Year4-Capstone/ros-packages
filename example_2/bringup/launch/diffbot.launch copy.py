@@ -101,11 +101,11 @@ def generate_launch_description():
     )
 
     # Spawn the actuation controller for homing. It runs and exits.
-    #actuation_controller_spawner = Node(
-    #    package="controller_manager",
-    #    executable="spawner",
-    #    arguments=["actuator_controller"],
-    #)
+    actuation_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["actuator_controller"],
+    )
 
     # Spawn the drive controller, but keep it inactive until homing is complete.
     robot_controller_spawner = Node(
@@ -113,7 +113,7 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             "diffbot_base_controller",
-            #"--inactive",  # Start the controller in an inactive state
+            "--inactive",  # Start the controller in an inactive state
             "--controller-ros-args",
             "-r /diffbot_base_controller/cmd_vel:=/cmd_vel",
         ],
@@ -128,12 +128,12 @@ def generate_launch_description():
     )
  
     # Start the drive controller after the homing/actuation controller is finished
-    #delay_robot_controller_spawner_after_actuation_controller = RegisterEventHandler(
-    ##    event_handler=OnProcessExit(
-    #        target_action=actuation_controller_spawner,
-    #        on_exit=[robot_controller_spawner],
-    #    )
-    #)
+    delay_robot_controller_spawner_after_actuation_controller = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=actuation_controller_spawner,
+            on_exit=[robot_controller_spawner],
+        )
+    )
 
     # Start the joint_state_broadcaster after the drive controller is loaded
     delay_joint_state_broadcaster_spawner_after_robot_controller = RegisterEventHandler(
@@ -153,9 +153,8 @@ def generate_launch_description():
     nodes = [
         control_node,
         robot_state_pub_node,
-        #actuation_controller_spawner,  # Start homing first
-        #delay_robot_controller_spawner_after_actuation_controller,
-        robot_controller_spawner,
+        actuation_controller_spawner,  # Start homing first
+        delay_robot_controller_spawner_after_actuation_controller,
         delay_joint_state_broadcaster_spawner_after_robot_controller,
         delay_rviz_after_joint_state_broadcaster_spawner,
         on_control_node_exit,

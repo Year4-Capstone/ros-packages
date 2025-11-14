@@ -49,6 +49,12 @@ ament_target_dependencies(motor_sub rclcpp geometry_msgs)
 add_executable(actuation_sub src/actuation_sub.cpp)
 ament_target_dependencies(actuation_sub rclcpp sensor_msgs)
 
+add_executable(limit_switch_test src/test_limit_switch.cpp)
+ament_target_dependencies(limit_switch_test rclcpp)
+target_link_libraries(limit_switch_test
+  ${PHIDGET22_LIBRARY}
+)
+
 add_executable(actuation_homing_node src/actuation_homing_node.cpp)
 ament_target_dependencies(actuation_homing_node 
   rclcpp 
@@ -97,6 +103,7 @@ install(TARGETS
   test_phidgets_motors
   actuation_homing_node
   homing_client
+  limit_switch_test
   DESTINATION lib/${PROJECT_NAME}/
 )
 
