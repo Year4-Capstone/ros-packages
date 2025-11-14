@@ -60,3 +60,25 @@ diffbot_base_controller:
     angular.z.max_jerk: 0.0
     angular.z.min_jerk: 0.0
 
+actuator_controller:
+  ros__parameters:
+    joints:
+      - actuator_joint_0
+      - actuator_joint_1
+      - actuator_joint_2
+      - actuator_joint_3
+
+    command_interfaces:
+      - velocity
+
+    state_interfaces:
+      - position
+      - velocity
+
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 0.0

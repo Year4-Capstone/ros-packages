@@ -36,6 +36,7 @@ add_library(
   ros2_control_demo_example_2
   SHARED
   hardware/diffbot_system.cpp
+  hardware/actuation_system.cpp
 )
 target_compile_features(ros2_control_demo_example_2 PUBLIC cxx_std_17)
 target_include_directories(ros2_control_demo_example_2 PUBLIC
@@ -60,7 +61,9 @@ target_link_libraries(ros2_control_demo_example_2 PUBLIC
 )
 
 # Export hardware plugins
+# Export hardware plugins
 pluginlib_export_plugin_description_file(hardware_interface ros2_control_demo_example_2.xml)
+pluginlib_export_plugin_description_file(hardware_interface actuation_system_hardware.xml)
 
 # INSTALL
 install(
