@@ -26,6 +26,19 @@ int main()
     PhidgetLimitSwitch limit_switch_hub2_port4(SERIAL_NUMBER_2, PORT_4);
     PhidgetLimitSwitch limit_switch_hub2_port5(SERIAL_NUMBER_2, PORT_5);
     
+    limit_switch_hub1_port4.setCallback([](int state){
+        printf("Hub1 Port4: %s\n", state ? "PRESSED" : "RELEASED");
+    });
+    limit_switch_hub1_port5.setCallback([](int state){
+        printf("Hub1 Port5: %s\n", state ? "PRESSED" : "RELEASED");
+    });
+    limit_switch_hub2_port4.setCallback([](int state){
+        printf("Hub2 Port4: %s\n", state ? "PRESSED" : "RELEASED");
+    });
+    limit_switch_hub2_port5.setCallback([](int state){
+        printf("Hub2 Port5: %s\n", state ? "PRESSED" : "RELEASED");
+    });
+
     // Initialize all limit switches
     printf("Initializing limit switches...\n");
     limit_switch_hub1_port4.init();
@@ -38,19 +51,7 @@ int main()
     
     // Continuously read and display limit switch states
     while (!shutdown_requested) {
-        bool hub1_port4 = limit_switch_hub1_port4.read();
-        bool hub1_port5 = limit_switch_hub1_port5.read();
-        bool hub2_port4 = limit_switch_hub2_port4.read();
-        bool hub2_port5 = limit_switch_hub2_port5.read();
-        
-        printf("\rHub1 Port4: %s | Hub1 Port5: %s | Hub2 Port4: %s | Hub2 Port5: %s   ", 
-               hub1_port4 ? "PRESSED" : "RELEASED",
-               hub1_port5 ? "PRESSED" : "RELEASED",
-               hub2_port4 ? "PRESSED" : "RELEASED",
-               hub2_port5 ? "PRESSED" : "RELEASED");
-        fflush(stdout);
-        
-        usleep(100000); // Sleep for 100ms
+        usleep(100000); // keep the program alive; onStateChange handles events
     }
     
     printf("\n\nShutting down limit switches...\n");

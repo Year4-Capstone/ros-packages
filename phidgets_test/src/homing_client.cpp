@@ -30,7 +30,7 @@ private:
         }
 
         auto goal_msg = HomingSequence::Goal();
-        goal_msg.homing_speed = 10.0;  // 10 RPM as requested
+        goal_msg.homing_speed = 0.1;  // 10 RPM as requested
 
         RCLCPP_INFO(get_logger(), "Sending homing goal");
 

@@ -3,33 +3,20 @@
 
     <ros2_control name="MobileBaseHardwareInterface" type="system">
         <hardware>
-            <plugin>mock_components/GenericSystem</plugin>
-            <param name="calculate_dynamics">true</param>
-        </hardware>
+            <plugin>ros2_control_demo_example_2/DiffBotSystemHardware</plugin>
+            </hardware>
 
-        <joint name="base_rear_right_wheel_joint">
+        <joint name="left_wheel_joint">
             <command_interface name="velocity" />
             <state_interface name="position" />
             <state_interface name="velocity" />
         </joint>
         
-        <joint name="base_rear_left_wheel_joint">
-            <command_interface name="velocity" />
-            <state_interface name="position" />
-            <state_interface name="velocity" />
-        </joint>
-
-        <joint name="base_front_right_wheel_joint">
-            <command_interface name="velocity" />
-            <state_interface name="position" />
-            <state_interface name="velocity" />
-        </joint>
-
-        <joint name="base_front_left_wheel_joint">
+        <joint name="right_wheel_joint">
             <command_interface name="velocity" />
             <state_interface name="position" />
             <state_interface name="velocity" />
         </joint>
     </ros2_control>
 
-</robot>
+    </robot>
