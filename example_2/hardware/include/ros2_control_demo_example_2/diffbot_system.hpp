@@ -62,7 +62,7 @@ private:
   std::vector<double> hw_commands_;
   std::vector<double> hw_positions_;
   std::vector<double> hw_velocities_;
-
+  std::array<double, 4> last_pos_rads_ {{0.0, 0.0, 0.0, 0.0}};
   // Phidgets Motor Controllers
   std::unique_ptr<PhidgetMotorController> motor_fl_;
   std::unique_ptr<PhidgetMotorController> motor_bl_;

@@ -142,6 +142,8 @@ hardware_interface::CallbackReturn DiffBotSystemHardware::on_activate(
     hw_velocities_[i] = 0.0;
     hw_commands_[i] = 0.0;
   }
+  
+  last_pos_rads_.fill(0.0);
 
   RCLCPP_INFO(get_logger(), "Successfully activated!");
 
@@ -170,15 +172,58 @@ hardware_interface::CallbackReturn DiffBotSystemHardware::on_deactivate(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+// diffbot_system.cpp
+
 hardware_interface::return_type DiffBotSystemHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
-  // In a real robot, you would read encoder values here.
-  // For now, we'll simulate the position based on the last commanded velocity.
-  for (uint i = 0; i < hw_commands_.size(); i++) {
-    hw_velocities_[i] = hw_commands_[i];  // This should be updated with real encoder data
-    hw_positions_[i] += period.seconds() * hw_velocities_[i];
-  }
+  // 1. Get current position from all 4 physical motors
+  std::array<double, 4> current_pos_rads;
+  current_pos_rads[0] = motor_fl_->getPositionRads(); // FL
+  current_pos_rads[1] = motor_bl_->getPositionRads(); // BL
+  current_pos_rads[2] = motor_fr_->getPositionRads(); // FR
+  current_pos_rads[3] = motor_br_->getPositionRads(); // BR
+
+  double dt = period.seconds();
+
+  // 2. Calculate and assign the aggregated state for the two ROS 2 Control joints
+  
+  // --- LEFT WHEEL JOINT (Index 0) ---
+  
+  // Calculate change in position for FL and BL motors
+  double delta_pos_fl = current_pos_rads[0] - last_pos_rads_[0];
+  double delta_pos_bl = current_pos_rads[1] - last_pos_rads_[1];
+  
+  // Calculate current velocity for FL and BL motors
+  double vel_fl = delta_pos_fl / dt;
+  double vel_bl = delta_pos_bl / dt;
+  
+  // Aggregate position and velocity for the left joint
+  hw_positions_[0] = (current_pos_rads[0] + current_pos_rads[1]) / 2.0; // Average position
+  hw_velocities_[0] = (vel_fl + vel_bl) / 2.0;                         // Average velocity
+
+  
+  // --- RIGHT WHEEL JOINT (Index 1) ---
+  
+  // Calculate change in position for FR and BR motors
+  double delta_pos_fr = current_pos_rads[2] - last_pos_rads_[2];
+  double delta_pos_br = current_pos_rads[3] - last_pos_rads_[3];
+  
+  // Calculate current velocity for FR and BR motors
+  double vel_fr = delta_pos_fr / dt;
+  double vel_br = delta_pos_br / dt;
+
+  // Aggregate position and velocity for the right joint
+  hw_positions_[1] = (current_pos_rads[2] + current_pos_rads[3]) / 2.0; // Average position
+  hw_velocities_[1] = (vel_fr + vel_br) / 2.0;                         // Average velocity
+
+
+  // 3. Store current positions as 'last' for the next cycle's velocity calculation
+  last_pos_rads_[0] = current_pos_rads[0];
+  last_pos_rads_[1] = current_pos_rads[1];
+  last_pos_rads_[2] = current_pos_rads[2];
+  last_pos_rads_[3] = current_pos_rads[3];
+
 
   return hardware_interface::return_type::OK;
 }
