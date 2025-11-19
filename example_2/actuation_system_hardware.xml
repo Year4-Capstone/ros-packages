@@ -1,9 +1,0 @@
-<library path="ros2_control_demo_example_2">
-  <class name="ros2_control_demo_example_2/ActuationSystemHardware"
-         type="ros2_control_demo_example_2::ActuationSystemHardware"
-         base_class_type="hardware_interface::SystemInterface">
-    <description>
-      Hardware interface for actuation system using Phidgets motors.
-    </description>
-  </class>
-</library>
