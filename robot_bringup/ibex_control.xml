@@ -1,0 +1,9 @@
+<library path="ibex_control">
+  <class name="ibex_control/DiffBotSystemHardware" 
+         type="ibex_control::DiffBotSystemHardware" 
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for Ibex differential drive robot with Phidgets motors
+    </description>
+  </class>
+</library>

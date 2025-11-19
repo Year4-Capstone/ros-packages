@@ -1,10 +1,27 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ibex">
 
-  <ros2_control name="GazeboSimSystem" type="system">
+  <ros2_control name="IbexDiffDirve" type="system">
       <hardware>
-        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        <plugin>mock_components/GenericSystem</plugin> 
+        <param name="calculate_dynamics">true</param>
       </hardware>
+
+      <!-- <hardware>
+        <plugin>ibex_control/DiffBotSystemHardware</plugin>
+        
+        <param name="bl_serial_num">527103</param>
+        <param name="bl_port_num">2</param>
+        <param name="br_serial_num">527103</param>
+        <param name="br_port_num">3</param>
+        
+        <param name="fl_serial_num">527164</param>
+        <param name="fl_port_num">2</param>
+        <param name="fr_serial_num">527164</param>
+        <param name="fr_port_num">3</param>
+
+      </hardware> -->
+
       <joint name="front_left_wheel_joint">
         <command_interface name="velocity">
           <param name="min">-1</param>
