@@ -1,8 +1,7 @@
-import os
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessStart
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -18,20 +17,31 @@ def generate_launch_description():
         [pkg_robot_bringup, 'config', 'diff_drive_controller.yaml']
     )
     
-    # Paths to your existing launch files
-    gazebo_launch_path = PathJoinSubstitution(
-        [pkg_robot_description, 'launch', 'view_robot_gazebo.launch.py']
+    xacro_file = PathJoinSubstitution(
+        [pkg_robot_description, 'urdf', 'ibex.urdf.xacro']
     )
+
     rviz_config_path = PathJoinSubstitution(
         [pkg_robot_description, 'rviz', 'ibex.rviz']
     )
 
-    # --- Include Existing Launch Files ---
+    robot_description_content = Command(
+        [FindExecutable(name='xacro'), ' ', xacro_file]
+    )
+    robot_description = {'robot_description': robot_description_content}
 
-    # 1. Launch Gazebo (which spawns the robot)
-    gazebo_sim = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(gazebo_launch_path),
-        launch_arguments={'use_sim_time': 'true'}.items()
+    node_robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[robot_description]
+    )
+
+    controller_manager_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_description, controller_config_file],
+        output="screen",
     )
 
     # 2. Launch Rviz
@@ -40,7 +50,7 @@ def generate_launch_description():
         executable="rviz2",
         arguments=['-d', rviz_config_path],
         output='screen',
-        parameters=[{'use_sim_time': True}]
+        parameters=[{'use_sim_time': False}]
     )
 
     # --- ROS 2 Control Spawners ---
@@ -50,20 +60,35 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster'],
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
         output='screen',
     )
 
     diff_drive_base_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['diff_drive_base_controller', '--param-file', controller_config_file],
+        arguments=['diff_drive_base_controller', '--controller-manager', '/controller_manager'],
         output='screen',
     )
 
+    delayed_diff_drive_spawner = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=controller_manager_node,
+            on_start=[diff_drive_base_controller_spawner],
+        )
+    )
+
+    delayed_joint_broad_spawner = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=controller_manager_node,
+            on_start=[joint_state_broadcaster_spawner],
+        )
+    )
+
     return LaunchDescription([
-        gazebo_sim,
+        node_robot_state_publisher,
+        controller_manager_node,
         rviz_node,
-        joint_state_broadcaster_spawner,
-        diff_drive_base_controller_spawner,
+        delayed_diff_drive_spawner,
+        delayed_joint_broad_spawner,
     ])
