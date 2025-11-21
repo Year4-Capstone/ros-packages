@@ -11,6 +11,8 @@ teleop_twist_joy_node:
       yaw: 0
     scale_angular:
       yaw: 0.4
+    scale_linear_turbo:
+      yaw: 1.5
 
     enable_button: 5  # Left trigger button
     enable_turbo_button: 4  # Right trigger button

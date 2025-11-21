@@ -31,13 +31,29 @@ int main()
         motors_drive[i]->init();
         motors_actuation[i]->init();
     }
+    for (int i = 0; i < NUM_MOTORS; i++) {
+        double position = motors_drive[i]->getPositionRads();
+        printf("Motor %d Position: %f\n", i, position);
+        printf(" ");
+    }
     
     // Set velocity of drive motors
     for (int i = 0; i < NUM_MOTORS; i++) {
-        motors_drive[i]->setVelocityRPM(8.2);
+        motors_drive[i]->setVelocityDuty(0.2);
     }
-
+    for (int i = 0; i < NUM_MOTORS; i++) {
+        double position = motors_drive[i]->getPositionRads();
+        printf("Motor %d Position: %f\n", i, position);
+        printf(" ");
+    }
+    
     sleep(5);
+
+    for (int i = 0; i < NUM_MOTORS; i++) {
+        double position = motors_drive[i]->getPositionRads();
+        printf("Motor %d Position: %f\n", i, position);
+        printf(" ");
+    }
 
     for (int i = 0; i < NUM_MOTORS; i++) {
         motors_drive[i]->cleanup();
