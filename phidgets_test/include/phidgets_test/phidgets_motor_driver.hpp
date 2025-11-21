@@ -36,9 +36,12 @@ public:
         checkError(ret, "Failed to set device serial number");
         ret = Phidget_setHubPort(reinterpret_cast<PhidgetHandle>(motor_), hub_port_);
         checkError(ret, "Failed to set hub port");
+
+   
         ret = Phidget_openWaitForAttachment(reinterpret_cast<PhidgetHandle>(motor_), 5000);
         checkError(ret, "Failed to attach to motor");
-
+        ret = PhidgetBLDCMotor_setDataInterval(motor_, 100);
+        checkError(ret, "Failed to set data interval");
         ret = PhidgetBLDCMotor_setStallVelocity(motor_, config_.stall_velocity);
         checkError(ret, "Failed to set rescale factor");
         ret = PhidgetBLDCMotor_setRescaleFactor(motor_, config_.rescale_factor);
@@ -63,14 +66,14 @@ public:
     }
 
     double getPositionDegs() {
-        double pos;
+        double pos = 0.0;
         PhidgetReturnCode ret = PhidgetBLDCMotor_getPosition(motor_, &pos);
         checkError(ret, "Failed to get position");
         return pos;
     }
 
     double getPositionRads() {
-        double pos;
+        double pos = 0.0;
         PhidgetReturnCode ret = PhidgetBLDCMotor_getPosition(motor_, &pos);
         checkError(ret, "Failed to get position");
         return degToRad(pos);
@@ -163,14 +166,14 @@ private:
         82,
         0.638297872340426,
         5.0,    // no idea if this works
-        0.3,
+        1,
     };
 
     static constexpr MotorConfig ACT_CONFIG {
         170,
         0.500, // update
         2.0,   // no idea if this works 
-        0.15,  // update 
+        0.5,  // update 
     };
 };
 

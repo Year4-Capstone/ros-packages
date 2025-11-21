@@ -41,6 +41,9 @@ public:
 
   hardware_interface::CallbackReturn on_init(
     const hardware_interface::HardwareComponentInterfaceParams & params) override;
+  
+  std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
+  std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
   hardware_interface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
@@ -68,6 +71,13 @@ private:
   std::unique_ptr<PhidgetMotorController> motor_bl_;
   std::unique_ptr<PhidgetMotorController> motor_fr_;
   std::unique_ptr<PhidgetMotorController> motor_br_;
+
+  size_t idx_fl_ = 0;
+  size_t idx_rl_ = 0;
+  size_t idx_fr_ = 0;
+  size_t idx_rr_ = 0;
+  bool motors_ready_ = false;
+  int read_counter_ = 0;
 };
 
 }  // namespace ros2_control_demo_example_2

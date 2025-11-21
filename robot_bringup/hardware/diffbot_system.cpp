@@ -98,9 +98,17 @@ hardware_interface::CallbackReturn DiffBotSystemHardware::on_init(
     }
   }
 
-  hw_commands_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  hw_positions_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
-  hw_velocities_.resize(info_.joints.size(), std::numeric_limits<double>::quiet_NaN());
+  for (size_t i = 0; i < info_.joints.size(); i++) {
+    std::string name = info_.joints[i].name;
+    if (name == "front_left_wheel_joint") idx_fl_ = i;
+    else if (name == "rear_left_wheel_joint") idx_rl_ = i;
+    else if (name == "front_right_wheel_joint") idx_fr_ = i;
+    else if (name == "rear_right_wheel_joint") idx_rr_ = i;
+  }
+
+  hw_positions_.resize(info_.joints.size(), 0.0);
+  hw_velocities_.resize(info_.joints.size(), 0.0);
+  hw_commands_.resize(info_.joints.size(), 0.0);
 
   return hardware_interface::CallbackReturn::SUCCESS;
 }
@@ -131,11 +139,37 @@ hardware_interface::CallbackReturn DiffBotSystemHardware::on_configure(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+std::vector<hardware_interface::StateInterface> DiffBotSystemHardware::export_state_interfaces()
+{
+  std::vector<hardware_interface::StateInterface> state_interfaces;
+  for (size_t i = 0; i < info_.joints.size(); i++)
+  {
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+      info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_positions_[i]));
+    state_interfaces.emplace_back(hardware_interface::StateInterface(
+      info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_velocities_[i]));
+  }
+  return state_interfaces;
+}
+
+std::vector<hardware_interface::CommandInterface> DiffBotSystemHardware::export_command_interfaces()
+{
+  std::vector<hardware_interface::CommandInterface> command_interfaces;
+  for (size_t i = 0; i < info_.joints.size(); i++)
+  {
+    command_interfaces.emplace_back(hardware_interface::CommandInterface(
+      info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &hw_commands_[i]));
+  }
+  return command_interfaces;
+}
+
 hardware_interface::CallbackReturn DiffBotSystemHardware::on_activate(
   const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(get_logger(), "Activating Phidgets motors...");
 
+  RCLCPP_INFO(get_logger(), "Waiting for motors to stabilize...");
+  rclcpp::sleep_for(std::chrono::milliseconds(500));
   // command and state should be equal when starting
   for (uint i = 0; i < hw_positions_.size(); i++) {
     hw_positions_[i] = 0.0;
@@ -177,53 +211,32 @@ hardware_interface::CallbackReturn DiffBotSystemHardware::on_deactivate(
 hardware_interface::return_type DiffBotSystemHardware::read(
   const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
 {
-  // 1. Get current position from all 4 physical motors
-  std::array<double, 4> current_pos_rads;
-  current_pos_rads[0] = motor_fl_->getPositionRads(); // FL
-  current_pos_rads[1] = motor_bl_->getPositionRads(); // BL
-  current_pos_rads[2] = motor_fr_->getPositionRads(); // FR
-  current_pos_rads[3] = motor_br_->getPositionRads(); // BR
-
+  // Read current positions from motors
+  double pos_fl = motor_fl_->getPositionRads();
+  double pos_bl = motor_bl_->getPositionRads();
+  double pos_fr = -1 * motor_fr_->getPositionRads();
+  double pos_br = -1 * motor_br_->getPositionRads();
+  
+  // Store positions in hardware interface arrays
+  hw_positions_[idx_fl_] = pos_fl;
+  hw_positions_[idx_rl_] = pos_bl;
+  hw_positions_[idx_fr_] = pos_fr;
+  hw_positions_[idx_rr_] = pos_br;
+  
+  // Calculate velocities using finite difference: velocity = (current_pos - last_pos) / dt
   double dt = period.seconds();
-
-  // 2. Calculate and assign the aggregated state for the two ROS 2 Control joints
+  if (dt > 0.0) {
+    hw_velocities_[idx_fl_] = (pos_fl - last_pos_rads_[0]) / dt;
+    hw_velocities_[idx_rl_] = (pos_bl - last_pos_rads_[1]) / dt;
+    hw_velocities_[idx_fr_] = (pos_fr - last_pos_rads_[2]) / dt;
+    hw_velocities_[idx_rr_] = (pos_br - last_pos_rads_[3]) / dt;
+  }
   
-  // --- LEFT WHEEL JOINT (Index 0) ---
-  
-  // Calculate change in position for FL and BL motors
-  double delta_pos_fl = current_pos_rads[0] - last_pos_rads_[0];
-  double delta_pos_bl = current_pos_rads[1] - last_pos_rads_[1];
-  
-  // Calculate current velocity for FL and BL motors
-  double vel_fl = delta_pos_fl / dt;
-  double vel_bl = delta_pos_bl / dt;
-  
-  // Aggregate position and velocity for the left joint
-  hw_positions_[0] = (current_pos_rads[0] + current_pos_rads[1]) / 2.0; // Average position
-  hw_velocities_[0] = (vel_fl + vel_bl) / 2.0;                         // Average velocity
-
-  
-  // --- RIGHT WHEEL JOINT (Index 1) ---
-  
-  // Calculate change in position for FR and BR motors
-  double delta_pos_fr = current_pos_rads[2] - last_pos_rads_[2];
-  double delta_pos_br = current_pos_rads[3] - last_pos_rads_[3];
-  
-  // Calculate current velocity for FR and BR motors
-  double vel_fr = delta_pos_fr / dt;
-  double vel_br = delta_pos_br / dt;
-
-  // Aggregate position and velocity for the right joint
-  hw_positions_[1] = (current_pos_rads[2] + current_pos_rads[3]) / 2.0; // Average position
-  hw_velocities_[1] = (vel_fr + vel_br) / 2.0;                         // Average velocity
-
-
-  // 3. Store current positions as 'last' for the next cycle's velocity calculation
-  last_pos_rads_[0] = current_pos_rads[0];
-  last_pos_rads_[1] = current_pos_rads[1];
-  last_pos_rads_[2] = current_pos_rads[2];
-  last_pos_rads_[3] = current_pos_rads[3];
-
+  // Update last position for next iteration
+  last_pos_rads_[0] = pos_fl;
+  last_pos_rads_[1] = pos_bl;
+  last_pos_rads_[2] = pos_fr;
+  last_pos_rads_[3] = pos_br;
 
   return hardware_interface::return_type::OK;
 }
@@ -234,13 +247,10 @@ hardware_interface::return_type ibex_control ::DiffBotSystemHardware::write(
   // The diff_drive_controller will provide velocity commands for 'left_wheel_joint' and 'right_wheel_joint'.
   // We need to send these commands to the four motors.
   // We assume joint 0 is left and joint 1 is right.
-  const double left_vel_cmd = hw_commands_[0];
-  const double right_vel_cmd = hw_commands_[1];
-
-  motor_fl_->setVelocityRads(left_vel_cmd);
-  motor_bl_->setVelocityRads(left_vel_cmd);
-  motor_fr_->setVelocityRads(right_vel_cmd);
-  motor_br_->setVelocityRads(right_vel_cmd);
+  motor_fl_->setVelocityRads(hw_commands_[idx_fl_]);
+  motor_bl_->setVelocityRads(hw_commands_[idx_rl_]);
+  motor_fr_->setVelocityRads(hw_commands_[idx_fr_]);
+  motor_br_->setVelocityRads(hw_commands_[idx_rr_]);
 
   return hardware_interface::return_type::OK;
 }

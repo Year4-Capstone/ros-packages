@@ -14,7 +14,7 @@ const int PORT_1 = 1; // back right
 const int PORT_2 = 0; // front left
 const int PORT_3 = 1; // front right
 
-const double LEG_MOVE_SPEED = 0.2; //change
+const double LEG_MOVE_SPEED = 0.3; //change
 const int BUTTON_LEGS_UP = 0;      //change 
 const int BUTTON_LEGS_DOWN = 1;    //change
 
