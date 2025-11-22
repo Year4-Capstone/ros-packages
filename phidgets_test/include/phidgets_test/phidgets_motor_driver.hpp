@@ -40,6 +40,8 @@ public:
    
         ret = Phidget_openWaitForAttachment(reinterpret_cast<PhidgetHandle>(motor_), 5000);
         checkError(ret, "Failed to attach to motor");
+        //ret = PhidgetBLDCMotor_setBrakingEnabled(motor_, 1.0); 
+        //checkError(ret, "Failed to set bracking to motor");
         ret = PhidgetBLDCMotor_setDataInterval(motor_, 100);
         checkError(ret, "Failed to set data interval");
         ret = PhidgetBLDCMotor_setStallVelocity(motor_, config_.stall_velocity);
