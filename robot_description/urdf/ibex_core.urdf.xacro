@@ -87,6 +87,71 @@
         <origin xyz="0 0 ${wheel_radius - (base_height / 2.0)}" rpy="0 0 0"/>
     </joint>
 
+
+    <link name="imu_link">
+        <inertial>
+            <origin xyz="-0.00552433659106688 0.000168210391520346 0.000514000497342681" rpy="0 0 0" />
+            <mass value="0.000528415362211671" />
+            <inertia ixx="1.46176048428261E-08" ixy="1.40015117949421E-10" ixz="-1.99633872937403E-12"
+                    iyy="8.59662482954888E-09" iyz="7.52375112767959E-12"
+                    izz="2.30279421279312E-08" />
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+            <material name="blue" />
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+        </collision>
+    </link>
+      
+    <joint name="imu_joint" type="fixed">
+        <origin xyz="0.45 -0.30 0.07" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="imu_link" />
+    </joint>
+
+
+    <link name="laser">
+        <inertial>
+            <origin xyz="-0.011945780406062 -0.000381929217680526 -0.0170649378129477" rpy="0 0 0" />
+            <mass value="0.073084435549317" />
+            <inertia ixx="1.96074931730795E-05" ixy="-3.62091076640009E-07" ixz="4.28230084046735E-07"
+                    iyy="2.40983835136327E-05" iyz="1.50180909250652E-08"
+                    izz="4.14184164228595E-05" />
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+            <cylinder radius="0.035" length="0.05"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+            <cylinder radius="0.035" length="0.05"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="laser_joint" type="fixed">
+        <origin xyz="0.45 0 0.12" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="laser" />
+    </joint>
+
+
     <xacro:wheel_macro name_prefix="rear_right" 
                         x_offset="${-wheel_axle_x_offset}" 
                         y_offset="${-wheel_y_span}" />
