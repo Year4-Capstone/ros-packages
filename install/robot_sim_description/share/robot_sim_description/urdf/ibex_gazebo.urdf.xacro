@@ -7,7 +7,7 @@
     </plugin>
     </gazebo>
 
-    <!-- <gazebo>
+    <gazebo>
         <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
         </plugin>
         <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
@@ -43,6 +43,6 @@
             </noise>
         </lidar>
         </sensor>
-    </gazebo> -->
+    </gazebo>
 
 </robot>
