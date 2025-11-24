@@ -1,0 +1,17 @@
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/config/diff_drive_controller.yaml
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/launch/ibex.launch.py
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/ament_index/resource_index/package_run_dependencies/robot_sim_bringup
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/ament_index/resource_index/parent_prefix_path/robot_sim_bringup
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/environment/ament_prefix_path.sh
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/environment/ament_prefix_path.dsv
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/environment/path.sh
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/environment/path.dsv
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/local_setup.bash
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/local_setup.sh
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/local_setup.zsh
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/local_setup.dsv
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/package.dsv
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/ament_index/resource_index/packages/robot_sim_bringup
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/cmake/robot_sim_bringupConfig.cmake
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/cmake/robot_sim_bringupConfig-version.cmake
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/package.xml
