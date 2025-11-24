@@ -18,7 +18,8 @@ or
 ros2 launch robot_sim_bringup ibex.launch.py
 
 # For slam too
-ros2 launch robot_sim_bringup slam.launch.py
+Only on system not from launch file rn and only with odom and lidar
+ros2 launch slam_toolbox online_async_launch.py
 
 ## For sim
 colcon build --packages-select robot_sim_description robot_sim_bringup
