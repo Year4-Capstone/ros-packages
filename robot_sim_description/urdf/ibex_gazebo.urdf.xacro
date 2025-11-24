@@ -8,11 +8,28 @@
     </gazebo>
 
     <gazebo>
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+            <render_engine>ogre2</render_engine>
+        </plugin>
+    </gazebo>
+
+    <!-- <gazebo>
         <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
         </plugin>
         <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
             <render_engine>ogre2</render_engine>
         </plugin>
+    </gazebo> -->
+
+
+    <gazebo reference="imu_link">
+        <sensor name="imu_sensor" type="imu">
+            <topic>imu/out</topic>
+            <always_on>true</always_on>
+            <update_rate>100</update_rate>
+
+            <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        </sensor>
     </gazebo>
 
     <gazebo reference="laser_link">
