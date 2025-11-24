@@ -58,9 +58,6 @@ def generate_launch_description():
             '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan'
         ],
-        remappings=[
-            ('/imu', '/imu/out'),
-        ],
         output='screen'
     )
 

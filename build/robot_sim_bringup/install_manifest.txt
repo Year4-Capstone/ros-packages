@@ -1,4 +1,5 @@
 /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/config/diff_drive_controller.yaml
+/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/launch/slam.launch.py
 /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/robot_sim_bringup/launch/ibex.launch.py
 /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/ament_index/resource_index/package_run_dependencies/robot_sim_bringup
 /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_bringup/share/ament_index/resource_index/parent_prefix_path/robot_sim_bringup

@@ -17,6 +17,9 @@ ros2 launch robot_bringup ibex.launch.py
 or
 ros2 launch robot_sim_bringup ibex.launch.py
 
+# For slam too
+ros2 launch robot_sim_bringup slam.launch.py
+
 ## For sim
 colcon build --packages-select robot_sim_description robot_sim_bringup
 

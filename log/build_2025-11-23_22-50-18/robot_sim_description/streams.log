@@ -1,0 +1,61 @@
+[0.010s] Invoking command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_description -DCMAKE_INSTALL_PREFIX=/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description
+[0.055s] -- The C compiler identification is GNU 13.3.0
+[0.100s] -- The CXX compiler identification is GNU 13.3.0
+[0.117s] -- Detecting C compiler ABI info
+[0.196s] -- Detecting C compiler ABI info - done
+[0.201s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.201s] -- Detecting C compile features
+[0.201s] -- Detecting C compile features - done
+[0.209s] -- Detecting CXX compiler ABI info
+[0.298s] -- Detecting CXX compiler ABI info - done
+[0.303s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.303s] -- Detecting CXX compile features
+[0.304s] -- Detecting CXX compile features - done
+[0.307s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.423s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.513s] -- Found rclcpp: 28.1.12 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.557s] -- Found rosidl_generator_c: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.570s] -- Found rosidl_generator_cpp: 4.6.6 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.585s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.601s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.667s] -- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.671s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[0.762s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[0.777s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[0.792s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.904s] -- Configuring done (0.9s)
+[0.907s] -- Generating done (0.0s)
+[0.909s] -- Build files have been written to: /home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description
+[0.926s] Invoked command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_description -DCMAKE_INSTALL_PREFIX=/home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description
+[0.927s] Invoking command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description -- -j16 -l16
+[0.972s] Invoked command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description -- -j16 -l16
+[0.982s] Invoking command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description
+[0.988s] -- Install configuration: ""
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/launch
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/launch/view_robot_gazebo.launch.py
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/launch/view_robot_rviz.launch.py
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/rviz
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/rviz/ibex.rviz
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/urdf
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/urdf/ibex_core.urdf.xacro
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/urdf/ibex.urdf.xacro
+[0.989s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/urdf/ibex_ros2_control.urdf.xacro
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/urdf/ibex_gazebo.urdf.xacro
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/world
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/world/empty_world.sdf
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/ament_index/resource_index/package_run_dependencies/robot_sim_description
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/ament_index/resource_index/parent_prefix_path/robot_sim_description
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/environment/ament_prefix_path.sh
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/environment/ament_prefix_path.dsv
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/environment/path.sh
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/environment/path.dsv
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/local_setup.bash
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/local_setup.sh
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/local_setup.zsh
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/local_setup.dsv
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/package.dsv
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/ament_index/resource_index/packages/robot_sim_description
+[0.990s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/cmake/robot_sim_descriptionConfig.cmake
+[0.991s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/cmake/robot_sim_descriptionConfig-version.cmake
+[0.991s] -- Installing: /home/luke/Projects/capstone/search-support-robots/ros-packages/install/robot_sim_description/share/robot_sim_description/package.xml
+[0.992s] Invoked command in '/home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/luke/Projects/capstone/search-support-robots/ros-packages/build/robot_sim_description
