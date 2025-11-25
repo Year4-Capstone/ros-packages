@@ -123,7 +123,7 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_footprint" />
         <child link="base_link" />
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0.0484" rpy="0 0 0"/>
     </joint>
 
     <!-- Flipper and Wheel Links using Macros -->
@@ -196,7 +196,7 @@
         
     <!-- Wheels     -->
     <xacro:wheel_macro 
-        name="front_left_wheel"
+        name="front_left"
         mesh_file="${mesh_front_left_wheel}"
         origin_xyz="-0.2794 -0.2708 -0.0516"
         origin_rpy="0 0 -1.57079"
@@ -206,7 +206,7 @@
         joint_axis="0.0 1.0 0.0" />
 
     <xacro:wheel_macro 
-        name="front_right_wheel"
+        name="front_right"
         mesh_file="${mesh_front_right_wheel}"
         origin_xyz="-0.2794 0.2708 -0.0516"
         origin_rpy="0 0 -1.57079"  
@@ -216,7 +216,7 @@
         joint_axis="0.0 1.0 0.0" /> 
     
     <xacro:wheel_macro 
-        name="rear_left_wheel"
+        name="rear_left"
         mesh_file="${mesh_rear_left_wheel}"
         origin_xyz=" 0.2794 -0.2708 -0.0516"
         origin_rpy="0 0 -1.57079"
@@ -226,7 +226,7 @@
         joint_axis="0.0 1.0 0.0" />
 
     <xacro:wheel_macro 
-        name="rear_right_wheel"
+        name="rear_right"
         mesh_file="${mesh_rear_right_wheel}"
         origin_xyz="0.2794 0.2708 -0.0516"
         origin_rpy="0 0 -1.57079"
