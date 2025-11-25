@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="cad_urdf">
-
-    <!-- Include the core physical robot definition (links, joints, inertia) -->
-    <xacro:include filename="cad_urdf_core.urdf.xacro" />
-    <!-- <xacro:include filename="cad_urdf_gazebo.urdf.xacro" /> -->
-    <xacro:include filename="cad_urdf_ros2_control.urdf.xacro" />
-    
-</robot>

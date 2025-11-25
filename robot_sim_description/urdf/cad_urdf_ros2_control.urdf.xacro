@@ -29,7 +29,7 @@
         </joint>
 
         <!-- Back Left Wheel -->
-        <joint name="back_left_wheel_joint">
+        <joint name="rear_left_wheel_joint">
           <command_interface name="velocity">
             <param name="min">-1</param>
             <param name="max">1</param>
