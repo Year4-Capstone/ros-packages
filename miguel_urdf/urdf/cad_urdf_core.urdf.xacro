@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="cad_urdf">
+
+    
+    <!-- Mesh file path variables -->
+    <xacro:property name="base_file_path"           value="package://miguel_urdf/meshes/" />
+    <xacro:property name="mesh_base_link"           value="${base_file_path}base_link.stl" />
+    <xacro:property name="mesh_front_left_flipper"  value="${base_file_path}flipper_front_left.stl" />
+    <xacro:property name="mesh_front_left_wheel"    value="${base_file_path}wheel_front_left.stl" />
+    <xacro:property name="mesh_front_right_flipper" value="${base_file_path}flipper_front_right.stl" />
+    <xacro:property name="mesh_front_right_wheel"   value="${base_file_path}wheel_front_right.stl" />
+    <xacro:property name="mesh_rear_left_flipper"   value="${base_file_path}flipper_rear_left.stl" />
+    <xacro:property name="mesh_rear_left_wheel"     value="${base_file_path}wheel_rear_left.stl" />
+    <xacro:property name="mesh_rear_right_flipper"  value="${base_file_path}flipper_rear_right.stl" />
+    <xacro:property name="mesh_rear_right_wheel"    value="${base_file_path}wheel_rear_right.stl" />
+    <!-- Mesh scale -->
+    <xacro:property name="mesh_scale"               value="0.001 0.001 0.001" />
+
+    <xacro:property name="wheel_mass" value="3.321118377201799"/>
+    <xacro:property name="wheel_ixx"  value="0.017539"/>
+    <xacro:property name="wheel_iyy"  value="0.011505"/>
+    <xacro:property name="wheel_izz"  value="0.012355"/>
+    
+    <xacro:property name="wheel_com_x_abs" value="0.08445"/> 
+    <xacro:property name="wheel_com_y"     value="-0.003338577608035853"/>
+    <xacro:property name="wheel_com_z"     value="0.0"/>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0" />
+    </material>
+
+    <material name="silver">
+        <color rgba="0.700 0.700 0.700 1.000"/>
+    </material>
+
+    <link name="base_footprint" />
+
+    <!-- Flipper Macro with Fixed Joint -->
+    <xacro:macro name="flipper_macro" params="name mesh_file origin_xyz origin_rpy inertial_origin_xyz inertial_mass inertial_ixx inertial_iyy inertial_izz inertial_ixy inertial_iyz inertial_ixz joint_origin_xyz joint_origin_rpy">
+        <link name="${name}">
+            <inertial>
+                <origin xyz="${inertial_origin_xyz}" rpy="0 0 0"/>
+                <mass value="${inertial_mass}"/>
+                <inertia ixx="${inertial_ixx}" iyy="${inertial_iyy}" izz="${inertial_izz}" 
+                         ixy="${inertial_ixy}" iyz="${inertial_iyz}" ixz="${inertial_ixz}"/>
+            </inertial>
+            <visual>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+                <material name="silver"/>
+            </visual>
+            <collision>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+            </collision>
+        </link>
+        
+        <joint name="${name}_flipper_joint" type="fixed">
+            <origin xyz="${joint_origin_xyz}" rpy="${joint_origin_rpy}"/>
+            <parent link="base_link"/>
+            <child link="${name}"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Wheel Macro with Continuous Joint -->
+    <xacro:macro name="wheel_macro" params="name mesh_file origin_xyz origin_rpy inertial_x_mult joint_origin_xyz joint_origin_rpy joint_axis">
+        <link name="${name}">
+            <inertial>
+                <origin xyz="${wheel_com_x_abs * inertial_x_mult} ${wheel_com_y} ${wheel_com_z}" rpy="0 0 0"/>
+                <mass value="${wheel_mass}"/>
+                <inertia ixx="${wheel_ixx}" iyy="${wheel_iyy}" izz="${wheel_izz}" 
+                         ixy="0.0" iyz="0.0" ixz="0.0"/>
+            </inertial>
+            <visual>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+            </collision>
+        </link>
+        
+        <joint name="${name}_wheel_joint" type="continuous">
+            <origin xyz="${joint_origin_xyz}" rpy="${joint_origin_rpy}"/>
+            <parent link="base_link"/>
+            <child link="${name}"/>
+            <axis xyz="${joint_axis}"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Base Link -->
+    <link name="base_link">
+        <inertial>
+            <origin xyz="-2.1660968987257366e-16 -1.7328775189805893e-16 0.028711464160038225" rpy="0 0 0"/>
+            <mass value="26.36828818920337"/>
+            <inertia ixx="2.061838" iyy="1.248081" izz="3.230816" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 -1.57079"/>
+            <geometry>
+                <mesh filename="${mesh_base_link}" scale="${mesh_scale}"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 -1.57079"/>
+            <geometry>
+                <mesh filename="${mesh_base_link}" scale="${mesh_scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Flipper and Wheel Links using Macros -->
+    <xacro:flipper_macro 
+        name="front_left_flipper"
+        mesh_file="${mesh_front_left_flipper}"
+        origin_xyz="-0.3108 -0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="0.044450000334023076 0.005646153366949069 0.249739430595357"
+        inertial_mass="7.296846138774613"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.262219"
+        inertial_izz="0.040985"
+        inertial_ixy="-0.0"
+        inertial_iyz="0.025816"
+        inertial_ixz="-0.0"
+        joint_origin_xyz="0.3108 0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+
+    <xacro:flipper_macro 
+        name="front_right_flipper"
+        mesh_file="${mesh_front_right_flipper}"
+        origin_xyz="-0.3108 0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="0.044450000334053885 0.01614155751815055 0.24928119135390578"
+        inertial_mass="7.296846138774627"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.256055"
+        inertial_izz="0.047149"
+        inertial_ixy="0.0"
+        inertial_iyz="-0.044632"
+        inertial_ixz="-0.0"
+        joint_origin_xyz="0.3108 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+
+    <xacro:flipper_macro 
+        name="rear_left_flipper"
+        mesh_file="${mesh_rear_left_flipper}"
+        origin_xyz="0.3108 -0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="-0.044450000334023076 0.22872695820013356 0.10042729128305261"
+        inertial_mass="7.29684613877462"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.100275"
+        inertial_izz="0.202929"
+        inertial_ixy="0.0"
+        inertial_iyz="-0.101331"
+        inertial_ixz="0.0"
+        joint_origin_xyz="-0.3108 0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+ 
+    <xacro:flipper_macro 
+        name="rear_right_flipper"
+        mesh_file="${mesh_rear_right_flipper}"
+        origin_xyz="0.3108 0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="-0.044450000334023076 0.016141557518147776 0.24928119135391122"
+        inertial_mass="7.29684613877462"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.256055"
+        inertial_izz="0.047149"
+        inertial_ixy="-0.0"
+        inertial_iyz="-0.044632"
+        inertial_ixz="0.0"
+        joint_origin_xyz="-0.3108 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+        
+    <!-- Wheels     -->
+    <xacro:wheel_macro 
+        name="front_left_wheel"
+        mesh_file="${mesh_front_left_wheel}"
+        origin_xyz="-0.2794 -0.2708 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_x_mult="-1"
+        joint_origin_xyz="0.2794 0.2708 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="0.0 1.0 0.0" />
+
+    <xacro:wheel_macro 
+        name="front_right_wheel"
+        mesh_file="${mesh_front_right_wheel}"
+        origin_xyz="-0.2794 0.2708 -0.0516"
+        origin_rpy="0 0 -1.57079"  
+        inertial_x_mult="1" 
+        joint_origin_xyz=" 0.2794 -0.2708 0.0516"  
+        joint_origin_rpy="0 0 0"  
+        joint_axis="0.0 1.0 0.0" /> 
+    
+    <xacro:wheel_macro 
+        name="rear_left_wheel"
+        mesh_file="${mesh_rear_left_wheel}"
+        origin_xyz=" 0.2794 -0.2708 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_x_mult="-1"
+        joint_origin_xyz="-0.2794 0.2708 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="0.0 1.0 0.0" />
+
+    <xacro:wheel_macro 
+        name="rear_right_wheel"
+        mesh_file="${mesh_rear_right_wheel}"
+        origin_xyz="0.2794 0.2708 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_x_mult="1"
+        joint_origin_xyz="-0.2794 -0.2708 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="0.0 1.0 0.0" />
+
+    <!-- <xacro:wheel_macro 
+        name="front_left_wheel"
+        mesh_file="${mesh_front_left_wheel}"
+        origin_xyz="-0.2708 -0.2794 -0.0516"
+        origin_rpy="0 0 0"
+        inertial_x_mult="1" 
+        joint_origin_xyz="0.2708 0.2794 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="1.0 0.0 0.0" /> -->
+
+    <!-- <xacro:wheel_macro 
+        name="front_right_wheel"
+        mesh_file="${mesh_front_right_wheel}"
+        origin_xyz="-0.2708 0.2794 -0.0516"
+        origin_rpy="0 0 0"
+        inertial_x_mult="1"
+        joint_origin_xyz="0.2708 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="1.0 0.0 0.0" />
+
+    <xacro:wheel_macro 
+        name="back_left_wheel"
+        mesh_file="${mesh_back_left_wheel}"
+        origin_xyz="0.2708 -0.2794 -0.0516"
+        origin_rpy="0 0 0"
+        inertial_x_mult="-1"
+        joint_origin_xyz="-0.2708 0.2794 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="-1.0 0.0 0.0" />
+
+    <xacro:wheel_macro 
+        name="back_right_wheel"
+        mesh_file="${mesh_back_right_wheel}"
+        origin_xyz="0.2708 0.2794 -0.0516"
+        origin_rpy="0 0 0"
+        inertial_x_mult="-1"
+        joint_origin_xyz="-0.2708 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0"
+        joint_axis="-1.0 0.0 0.0" /> -->
+
+</robot>

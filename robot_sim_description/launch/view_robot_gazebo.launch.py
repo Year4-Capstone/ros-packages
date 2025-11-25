@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_path
 from launch.substitutions import PathJoinSubstitution, Command, LaunchConfiguration
@@ -10,10 +10,17 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    robot_sim_description_path = get_package_share_directory('robot_sim_description')
     gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
+    robot_sim_description_parent_path = os.path.dirname(robot_sim_description_path)
+    set_gz_resource_path = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=robot_sim_description_parent_path
+    )
 
-    world_path = os.path.join(get_package_share_path('robot_description'), 'world', 'empty_world.sdf')
-    urdf_path = os.path.join(get_package_share_path('robot_description'), 'urdf', 'ibex.urdf.xacro')
+    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
+    #urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
+    urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
 
     robot_description_content = Command(
         [
@@ -61,6 +68,7 @@ def generate_launch_description():
 
     # Create the final launch description
     return LaunchDescription([
+        set_gz_resource_path,
         gazebo,
         robot_state_publisher_node,
         gazebo_spawn_entity_node,

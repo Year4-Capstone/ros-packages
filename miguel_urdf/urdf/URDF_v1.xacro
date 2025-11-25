@@ -1,0 +1,252 @@
+<?xml version="1.0" ?>
+<robot name="URDF_v1" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find miguel_urdf)/urdf/materials.xacro" />
+<xacro:include filename="$(find miguel_urdf)/urdf/URDF_v1.trans" />
+<xacro:include filename="$(find miguel_urdf)/urdf/URDF_v1.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="-2.1660968987257366e-16 -1.7328775189805893e-16 0.028711464160038225" rpy="0 0 0"/>
+    <mass value="26.36828818920337"/>
+    <inertia ixx="2.061838" iyy="1.248081" izz="3.230816" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Components_v7__1__1">
+  <inertial>
+    <origin xyz="0.044450000334023076 0.005646153366949069 0.249739430595357" rpy="0 0 0"/>
+    <mass value="7.296846138774613"/>
+    <inertia ixx="0.281827" iyy="0.262219" izz="0.040985" ixy="-0.0" iyz="0.025816" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.3108 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7__1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.3108 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7__1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Disk_v1_1">
+  <inertial>
+    <origin xyz="0.08445000000000014 -0.003338577608035853 2.0816681711721685e-17" rpy="0 0 0"/>
+    <mass value="3.321118377201799"/>
+    <inertia ixx="0.017539" iyy="0.011505" izz="0.012355" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.2708 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.2708 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Components_v3_Mirror__2">
+  <inertial>
+    <origin xyz="0.044450000334053885 0.01614155751815055 0.24928119135390578" rpy="0 0 0"/>
+    <mass value="7.296846138774627"/>
+    <inertia ixx="0.281827" iyy="0.256055" izz="0.047149" ixy="0.0" iyz="-0.044632" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.3108 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v3_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.3108 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v3_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Components_v7_Mirror__1">
+  <inertial>
+    <origin xyz="-0.044450000334023076 0.22872695820013356 0.10042729128305261" rpy="0 0 0"/>
+    <mass value="7.29684613877462"/>
+    <inertia ixx="0.281827" iyy="0.100275" izz="0.202929" ixy="0.0" iyz="-0.101331" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.3108 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.3108 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Disk_v1_Mirror__2">
+  <inertial>
+    <origin xyz="-0.0844500000000003 -0.003338577608035853 -1.3877787807814457e-17" rpy="0 0 0"/>
+    <mass value="3.321118377201799"/>
+    <inertia ixx="0.017539" iyy="0.011505" izz="0.012355" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.2708 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.2708 -0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Components_v7_1">
+  <inertial>
+    <origin xyz="-0.044450000334023076 0.016141557518147776 0.24928119135391122" rpy="0 0 0"/>
+    <mass value="7.29684613877462"/>
+    <inertia ixx="0.281827" iyy="0.256055" izz="0.047149" ixy="-0.0" iyz="-0.044632" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.3108 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.3108 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Components_v7_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Disk_v1__1__1">
+  <inertial>
+    <origin xyz="-0.08444999999999714 -0.003338577608035853 2.0816681711721685e-17" rpy="0 0 0"/>
+    <mass value="3.321118377201799"/>
+    <inertia ixx="0.017539" iyy="0.011505" izz="0.012355" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.2708 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1__1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.2708 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1__1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Flipper_Disk_v1_Mirror___1__1">
+  <inertial>
+    <origin xyz="0.08444999999999991 -0.003338577608035853 -1.3877787807814457e-17" rpy="0 0 0"/>
+    <mass value="3.321118377201799"/>
+    <inertia ixx="0.017539" iyy="0.011505" izz="0.012355" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.2708 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_Mirror___1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.2708 0.2794 -0.0516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find miguel_urdf)/meshes/Flipper_Disk_v1_Mirror___1__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="Revolute 22" type="continuous">
+  <origin xyz="0.3108 0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Components_v7__1__1"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 23" type="continuous">
+  <origin xyz="0.2708 0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Disk_v1_1"/>
+  <axis xyz="1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 24" type="continuous">
+  <origin xyz="0.3108 -0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Components_v3_Mirror__2"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 26" type="continuous">
+  <origin xyz="-0.3108 0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Components_v7_Mirror__1"/>
+  <axis xyz="1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 27" type="continuous">
+  <origin xyz="-0.2708 0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Disk_v1_Mirror__2"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 28" type="continuous">
+  <origin xyz="-0.3108 -0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Components_v7_1"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 29" type="continuous">
+  <origin xyz="-0.2708 -0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Disk_v1__1__1"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Revolute 30" type="continuous">
+  <origin xyz="0.2708 -0.2794 0.0516" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="Flipper_Disk_v1_Mirror___1__1"/>
+  <axis xyz="1.0 0.0 0.0"/>
+</joint>
+
+</robot>
