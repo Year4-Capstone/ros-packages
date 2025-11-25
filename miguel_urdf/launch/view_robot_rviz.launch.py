@@ -7,9 +7,8 @@ from ament_index_python.packages import get_package_share_path
 
 def generate_launch_description():
 
-    #urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
-    urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
-    #rviz_config_path = os.path.join(get_package_share_path('robot_sim_description'), 'rviz', 'ibex.rviz')
+    urdf_path = os.path.join(get_package_share_path('miguel_urdf'), 'urdf', 'cad_urdf_core.urdf.xacro')
+    rviz_config_path = os.path.join(get_package_share_path('miguel_urdf'), 'rviz', 'cad_urdf.rviz')
     
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
@@ -27,7 +26,7 @@ def generate_launch_description():
     rviz2_node = Node(
         package="rviz2",
         executable="rviz2",
-        #arguments=['-d', rviz_config_path]
+        arguments=['-d', rviz_config_path]
     )
 
     return LaunchDescription([

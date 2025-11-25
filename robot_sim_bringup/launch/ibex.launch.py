@@ -9,8 +9,8 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     # --- Package Name ---
     # Ensure this matches your actual package name (e.g., 'robot_description' or 'robot_bringup')
-    pkg_robot_description = FindPackageShare('robot_description')
-    pkg_robot_bringup = FindPackageShare('robot_bringup')
+    pkg_robot_description = FindPackageShare('robot_sim_description')
+    pkg_robot_bringup = FindPackageShare('robot_sim_bringup')
     # --- Paths ---
     
     # Path to the controller configuration YAML file
