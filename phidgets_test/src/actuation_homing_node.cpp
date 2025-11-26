@@ -21,24 +21,24 @@ public:
         // Constants from test files
         const int SERIAL_NUMBER_1 = 527103;
         const int SERIAL_NUMBER_2 = 527164;
-        //const int MOTOR_PORT_0 = 0;
-        //const int MOTOR_PORT_1 = 1;
-        const int MOTOR_PORT_2 = 2; // front left
-        const int MOTOR_PORT_3 = 3; // front right
+        const int MOTOR_PORT_0 = 0;
+        const int MOTOR_PORT_1 = 1;
+        // const int MOTOR_PORT_2 = 2; // front left
+        // const int MOTOR_PORT_3 = 3; // front right
         const int LIMIT_PORT_4 = 4;
         const int LIMIT_PORT_5 = 5;
 
         // Initialize motors
-        motors_[0] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_1, MOTOR_PORT_2, MotorType::Drive, +1);
-        motors_[1] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_1, MOTOR_PORT_3, MotorType::Drive, +1);
-        motors_[2] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_2, MOTOR_PORT_2, MotorType::Drive, +1);
-        motors_[3] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_2, MOTOR_PORT_3, MotorType::Drive, +1);
+        motors_[0] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_1, MOTOR_PORT_0, MotorType::Actuation, +1);
+        motors_[1] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_1, MOTOR_PORT_1, MotorType::Actuation, +1);
+        motors_[2] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_2, MOTOR_PORT_0, MotorType::Actuation, +1);
+        motors_[3] = std::make_unique<PhidgetMotorController>(SERIAL_NUMBER_2, MOTOR_PORT_1, MotorType::Actuation, +1);
 
         // Initialize limit switches
-        limit_switches_[0] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_1, LIMIT_PORT_4);
+        limit_switches_[0] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_2, LIMIT_PORT_5);
         limit_switches_[1] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_1, LIMIT_PORT_5);
         limit_switches_[2] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_2, LIMIT_PORT_4);
-        limit_switches_[3] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_2, LIMIT_PORT_5);
+        limit_switches_[3] = std::make_unique<PhidgetLimitSwitch>(SERIAL_NUMBER_1, LIMIT_PORT_4);
         
         // Init triggered flags + callbacks
         for (int i = 0; i < 4; ++i) {
@@ -79,7 +79,7 @@ private:
     std::array<std::unique_ptr<PhidgetLimitSwitch>, 4> limit_switches_;
     rclcpp_action::Server<HomingSequence>::SharedPtr action_server_;
     std::array<std::atomic<bool>, 4> limit_triggered_;
-    const double BACKOFF_ANGLE = 0.0; // degrees
+    const double BACKOFF_ANGLE = 7.5; // degrees
 
     rclcpp_action::GoalResponse handle_goal(
         const rclcpp_action::GoalUUID &,
@@ -198,9 +198,12 @@ private:
         if (goal_handle->is_canceling()) return;
 
         // Reset position to 0 after homing
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         motors_[index]->resetPosition();
 
         // Mark as completed
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        feedback->positions[index] = motors_[index]->getPositionDegs();  // Should be ~0
         feedback->status[index] = 2;  // 2 = completed
         goal_handle->publish_feedback(feedback);
     }

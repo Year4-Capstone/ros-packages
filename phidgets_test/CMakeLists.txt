@@ -95,6 +95,10 @@ target_link_libraries(actuation_sub
   ${PHIDGET22_LIBRARY}
 )
 
+install(PROGRAMS
+  src/plot_homing_positions.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(TARGETS
   test_bldc_motors

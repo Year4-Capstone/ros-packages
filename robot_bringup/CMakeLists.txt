@@ -69,6 +69,13 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+  PROGRAMS
+    scripts/plot_joint_velocities.py
+    scripts/plot_robot_velocities.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_export_targets(export_ibex_control)
 ament_export_dependencies(
   hardware_interface
