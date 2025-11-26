@@ -43,6 +43,17 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
+    slam_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('slam_toolbox'),
+            '/launch/online_async_launch.py'
+        ]),
+        launch_arguments={
+            'use_sim_time': 'true',
+            'odom': '/diff_drive_base_controller/odom'
+        }.items()
+    )
+
     # --- ROS 2 Control Spawners ---
     # Launched immediately without event handlers. 
     # They might error initially while waiting for Gazebo to start, but will retry.
@@ -63,6 +74,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         gazebo_sim,
+        slam_launch,
         rviz_node,
         joint_state_broadcaster_spawner,
         diff_drive_base_controller_spawner,
