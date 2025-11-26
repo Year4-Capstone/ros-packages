@@ -173,7 +173,7 @@ private:
 
     static constexpr MotorConfig ACT_CONFIG {
         170,
-        0.500, // update
+        0.02173913, // update
         2.0,   // no idea if this works 
         0.5,  // update 
     };
