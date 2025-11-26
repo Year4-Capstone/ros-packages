@@ -10,10 +10,10 @@
     <xacro:property name="mesh_rear_left_wheel"     value="${base_file_path}wheel_rear_left.stl" />
     <xacro:property name="mesh_rear_right_wheel"    value="${base_file_path}wheel_rear_right.stl" />
 
-    <!-- <xacro:property name="mesh_front_left_flipper"  value="${base_file_path}flipper_front_left.stl" /> -->
-    <!-- <xacro:property name="mesh_front_right_flipper" value="${base_file_path}flipper_front_right.stl" /> -->
-    <!-- <xacro:property name="mesh_rear_left_flipper"   value="${base_file_path}flipper_rear_left.stl" /> -->
-    <!-- <xacro:property name="mesh_rear_right_flipper"  value="${base_file_path}flipper_rear_right.stl" /> -->
+    <xacro:property name="mesh_front_left_flipper"  value="${base_file_path}flipper_front_left.stl" />
+    <xacro:property name="mesh_front_right_flipper" value="${base_file_path}flipper_front_right.stl" />
+    <xacro:property name="mesh_rear_left_flipper"   value="${base_file_path}flipper_front_left.stl" />
+    <xacro:property name="mesh_rear_right_flipper"  value="${base_file_path}flipper_rear_right.stl" />
 
     <!-- Mesh scale -->
     <xacro:property name="mesh_scale"               value="0.001 0.001 0.001" />
@@ -52,7 +52,7 @@
     <link name="base_footprint" />
 
     <!-- Flipper Macro with Fixed Joint -->
-    <!-- <xacro:macro name="flipper_macro" params="name mesh_file origin_xyz origin_rpy inertial_origin_xyz inertial_mass inertial_ixx inertial_iyy inertial_izz inertial_ixy inertial_iyz inertial_ixz joint_origin_xyz joint_origin_rpy">
+    <xacro:macro name="flipper_macro" params="name mesh_file origin_xyz origin_rpy inertial_origin_xyz inertial_mass inertial_ixx inertial_iyy inertial_izz inertial_ixy inertial_iyz inertial_ixz joint_origin_xyz joint_origin_rpy">
         <link name="${name}">
             <inertial>
                 <origin xyz="${inertial_origin_xyz}" rpy="0 0 0"/>
@@ -80,7 +80,7 @@
             <parent link="base_link"/>
             <child link="${name}"/>
         </joint>
-    </xacro:macro> -->
+    </xacro:macro>
 
     <!-- Wheel Macro with Continuous Joint -->
     <xacro:macro name="wheel_macro" params="name_prefix x_offset y_offset z_offset">
@@ -167,16 +167,14 @@
                         y_offset="${-wheel_offset_y}"
                         z_offset="${wheel_offset_z}" />
 
-
-</robot>
-        <!-- Flipper and Wheel Links using Macros -->
-    <!-- <xacro:flipper_macro 
+            <!-- Flipper and Wheel Links using Macros -->
+    <xacro:flipper_macro 
         name="front_left_flipper"
         mesh_file="${mesh_front_left_flipper}"
         origin_xyz="-0.3108 -0.2794 -0.0516"
         origin_rpy="0 0 -1.57079"
         inertial_origin_xyz="0.044450000334023076 0.005646153366949069 0.249739430595357"
-        inertial_mass="7.296846138774613"
+        inertial_mass="0.01"
         inertial_ixx="0.281827"
         inertial_iyy="0.262219"
         inertial_izz="0.040985"
@@ -193,7 +191,7 @@
         origin_xyz="-0.3108 0.2794 -0.0516"
         origin_rpy="0 0 -1.57079"
         inertial_origin_xyz="0.044450000334053885 0.01614155751815055 0.24928119135390578"
-        inertial_mass="7.296846138774627"
+        inertial_mass="0.01"
         inertial_ixx="0.281827"
         inertial_iyy="0.256055"
         inertial_izz="0.047149"
@@ -203,14 +201,14 @@
         joint_origin_xyz="0.3108 -0.2794 0.0516"
         joint_origin_rpy="0 0 0" />
 
-
+<!-- bad one -->
     <xacro:flipper_macro 
         name="rear_left_flipper"
         mesh_file="${mesh_rear_left_flipper}"
-        origin_xyz="0.3108 -0.2794 -0.0516"
+        origin_xyz="0.3108 0.4294 -0.0516"
         origin_rpy="0 0 -1.57079"
         inertial_origin_xyz="-0.044450000334023076 0.22872695820013356 0.10042729128305261"
-        inertial_mass="7.29684613877462"
+        inertial_mass="0.01"
         inertial_ixx="0.281827"
         inertial_iyy="0.100275"
         inertial_izz="0.202929"
@@ -227,7 +225,7 @@
         origin_xyz="0.3108 0.2794 -0.0516"
         origin_rpy="0 0 -1.57079"
         inertial_origin_xyz="-0.044450000334023076 0.016141557518147776 0.24928119135391122"
-        inertial_mass="7.29684613877462"
+        inertial_mass="0.01"
         inertial_ixx="0.281827"
         inertial_iyy="0.256055"
         inertial_izz="0.047149"
@@ -235,7 +233,10 @@
         inertial_iyz="-0.044632"
         inertial_ixz="0.0"
         joint_origin_xyz="-0.3108 -0.2794 0.0516"
-        joint_origin_rpy="0 0 0" /> -->
+        joint_origin_rpy="0 0 0" />
+
+</robot>
+
 
     <!-- <xacro:wheel_macro 
         name="front_left_wheel"
