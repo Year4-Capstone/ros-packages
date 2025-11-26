@@ -1,0 +1,30 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+
+  - Class: rviz_common/Views
+    Name: Views
+
+Visualization Manager:
+  Global Options:
+    Fixed Frame: map
+    Background Color: 48; 48; 48
+
+  Displays:
+    - Name: TF
+      Class: rviz_default_plugins/TF
+      Enabled: true
+
+    - Name: IMU Axes
+      Class: rviz_default_plugins/Axes
+      Enabled: true
+      Length: 0.3
+      Radius: 0.03
+      Frame: imu_link
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 0.6
+      Pitch: 0.5
+      Yaw: 0.0
