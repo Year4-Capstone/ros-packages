@@ -161,7 +161,7 @@
             <geometry>
                 <box size="0.1 0.1 0.05"/>
             </geometry>
-            <material name="blue" />
+            <material name="black" />
         </visual>
 
         <collision>
@@ -193,7 +193,7 @@
             <geometry>
             <cylinder radius="0.035" length="0.05"/>
             </geometry>
-            <material name="blue"/>
+            <material name="black"/>
         </visual>
 
         <collision>
