@@ -19,7 +19,7 @@ diff_drive_base_controller:
     wheel_separation: 0.609
     wheel_radius: 0.102
 
-    wheel_separation_multiplier: 1.6
+    wheel_separation_multiplier: 2.40
     left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0
 
@@ -41,17 +41,17 @@ diff_drive_base_controller:
     # Whenever a min_* is unspecified, default to -max_*
     linear.x.has_velocity_limits: true
     linear.x.has_acceleration_limits: true
-    linear.x.max_velocity: 1.0
-    linear.x.min_velocity: -1.0
-    linear.x.max_acceleration: 1.0
+    linear.x.max_velocity: 0.88
+    linear.x.min_velocity: -0.88
+    linear.x.max_acceleration: 0.88
     linear.x.max_jerk: 2.0
     linear.x.min_jerk: -2.0
 
     angular.z.has_velocity_limits: true
     angular.z.has_acceleration_limits: true
-    angular.z.max_velocity: 2.0
-    angular.z.min_velocity: -2.0
-    angular.z.max_acceleration: 2.0
-    angular.z.min_acceleration: -2.0
+    angular.z.max_velocity: 1.2
+    angular.z.min_velocity: -1.2
+    angular.z.max_acceleration: 1.2
+    angular.z.min_acceleration: -1.2
     angular.z.max_jerk: 2.0
     angular.z.min_jerk: -2.0

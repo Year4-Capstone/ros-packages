@@ -79,7 +79,7 @@ private:
     std::array<std::unique_ptr<PhidgetLimitSwitch>, 4> limit_switches_;
     rclcpp_action::Server<HomingSequence>::SharedPtr action_server_;
     std::array<std::atomic<bool>, 4> limit_triggered_;
-    const double BACKOFF_ANGLE = 25.0; // degrees
+    const double BACKOFF_ANGLE = 7.5; // degrees
 
     rclcpp_action::GoalResponse handle_goal(
         const rclcpp_action::GoalUUID &,
@@ -198,9 +198,12 @@ private:
         if (goal_handle->is_canceling()) return;
 
         // Reset position to 0 after homing
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         motors_[index]->resetPosition();
 
         // Mark as completed
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        feedback->positions[index] = motors_[index]->getPositionDegs();  // Should be ~0
         feedback->status[index] = 2;  // 2 = completed
         goal_handle->publish_feedback(feedback);
     }

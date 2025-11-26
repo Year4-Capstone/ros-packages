@@ -102,10 +102,15 @@ class HomingPositionPlotter(Node):
         for i in range(4):
             status = 'Success' if result.success[i] else 'Failed'
             self.get_logger().info(f'Leg {i}: {status} - Final position: {result.positions[i]:.2f}°')
+            
+            # UPDATE LEG STATUS BASED ON RESULT
+            if result.success[i]:
+                self.leg_status[i] = 2  # Completed
+            else:
+                self.leg_status[i] = 3  # Failed
         
         self.homing_active = False
         self.homing_complete = True
-
 
 def main():
     rclpy.init()
@@ -132,7 +137,7 @@ def main():
         ax.axhline(y=0, color='k', linestyle='--', linewidth=1, alpha=0.5, label='Home Position')
         
         line, = ax.plot([], [], color=color, linewidth=2, label='Position')
-        ax.legend(loc='upper right', fontsize=9)
+        ax.legend(loc='lower left', fontsize=9)
         lines.append((line, ax))
     
     # Status text boxes
@@ -152,6 +157,7 @@ def main():
     # Flag to track if goal has been sent
     goal_sent = False
     
+
     def update_plot(frame):
         """Animation update function"""
         nonlocal goal_sent
@@ -204,18 +210,18 @@ def main():
             
             all_lines.append(line)
         
-            # Update overall status
-            bbox = overall_status_text.get_bbox_patch()
-            if bbox:
-                if node.homing_complete:
-                    overall_status_text.set_text('Homing Sequence: COMPLETE')
-                    bbox.set_facecolor('lightgreen')
-                elif node.homing_active:
-                    overall_status_text.set_text('Homing Sequence: IN PROGRESS')
-                    bbox.set_facecolor('lightyellow')
-                else:
-                    overall_status_text.set_text('Homing Sequence: WAITING TO START')
-                    bbox.set_facecolor('lightgray')
+        # Update overall status (MOVED OUTSIDE THE FOR LOOP)
+        bbox = overall_status_text.get_bbox_patch()
+        if bbox:
+            if node.homing_complete:
+                overall_status_text.set_text('Homing Sequence: COMPLETE')
+                bbox.set_facecolor('lightgreen')
+            elif node.homing_active:
+                overall_status_text.set_text('Homing Sequence: IN PROGRESS')
+                bbox.set_facecolor('lightyellow')
+            else:
+                overall_status_text.set_text('Homing Sequence: WAITING TO START')
+                bbox.set_facecolor('lightgray')
         
         return all_lines
     # Create animation
