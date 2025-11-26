@@ -10,7 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 
 install(
-  DIRECTORY launch rviz urdf world
+  DIRECTORY launch rviz urdf meshes world
   DESTINATION share/${PROJECT_NAME}
 )
 
