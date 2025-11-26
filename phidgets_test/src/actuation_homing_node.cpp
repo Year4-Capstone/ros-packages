@@ -79,7 +79,7 @@ private:
     std::array<std::unique_ptr<PhidgetLimitSwitch>, 4> limit_switches_;
     rclcpp_action::Server<HomingSequence>::SharedPtr action_server_;
     std::array<std::atomic<bool>, 4> limit_triggered_;
-    const double BACKOFF_ANGLE = 0.0; // degrees
+    const double BACKOFF_ANGLE = 10.0; // degrees
 
     rclcpp_action::GoalResponse handle_goal(
         const rclcpp_action::GoalUUID &,
