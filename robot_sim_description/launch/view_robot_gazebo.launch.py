@@ -12,8 +12,8 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
 
-    world_path = os.path.join(get_package_share_path('robot_description'), 'world', 'empty_world.sdf')
-    urdf_path = os.path.join(get_package_share_path('robot_description'), 'urdf', 'ibex.urdf.xacro')
+    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
+    urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
 
     robot_description_content = Command(
         [
