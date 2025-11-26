@@ -140,6 +140,30 @@ Visualization Manager:
               {}
       Update Interval: 0
       Value: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Enabled: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /scan
+      Size (m): 0.03
+      Color: 255; 0; 0
+      Queue Size: 10
+    - Class: rviz_default_plugins/Map
+      Name: Map
+      Enabled: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Alpha: 0.7
+      Color Scheme: map
+
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
