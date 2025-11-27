@@ -53,13 +53,14 @@ ros2 bag record /scan /odom /map /tf /tf_static /slam_toolbox/pose /ground_truth
 
 Extracting ground truth
 pip install git+https://github.com/MichaelGrupp/evo.git
-evo_traj bag2 lidar_in_center_results /pose --save_as_tum
+evo_traj bag2 slam_eval_bag /ground_truth_pose --save_as_tum
+evo_traj bag2 slam_eval_bag /pose --save_as_tum
 
-Need to run bridge
-ros2 run ros_gz_bridge parameter_bridge '/world/default/dynamic_pose/info@geometry_msgs/msg/PoseArray@gz.msgs.Pose_V'
+Evaluating
+evo_ape tum ground_truth_pose.tum pose.tum --plot --save_results results_ape
+evo_rpe tum ground_truth_pose.tum pose.tum --plot --save_results results_rpe
 
-
-This is ground truth
+This is ground truth - I (luke) added a bridge to /ground_truth_pose, so can probably remove this
 ros2 topic echo /world/default/dynamic_pose/info --once
 
 
