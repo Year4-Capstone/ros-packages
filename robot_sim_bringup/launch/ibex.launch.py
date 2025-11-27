@@ -50,7 +50,9 @@ def generate_launch_description():
         ]),
         launch_arguments={
             'use_sim_time': 'true',
-            'odom': '/diff_drive_base_controller/odom'
+            'params_file': PathJoinSubstitution([
+                pkg_robot_bringup, 'config', 'slam_params.yaml'
+            ])
         }.items()
     )
 
@@ -72,9 +74,28 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Ground truth of robot pose
+    gz_gt_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/world/default/dynamic_pose/info@geometry_msgs/msg/PoseArray@gz.msgs.Pose_V'
+        ],
+        output='screen'
+    )
+
+    gt_extractor_node = Node(
+        package='robot_sim_bringup',
+        executable='gt_robot_pose.py',
+        name='gt_robot_pose',
+        output='screen'
+    )
+
     return LaunchDescription([
         gazebo_sim,
         slam_launch,
+        gz_gt_bridge,
+        gt_extractor_node,
         rviz_node,
         joint_state_broadcaster_spawner,
         diff_drive_base_controller_spawner,
