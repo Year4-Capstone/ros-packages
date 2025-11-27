@@ -44,6 +44,25 @@ Running controller in other terminal:
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_drive_base_controller/cmd_vel -p stamped:=true
 
 
+## For repeated motion
+ros2 bag record /cmd_vel
+ros2 bag play my_motion.bag --loop
+
+Record this for analysis
+ros2 bag record /scan /odom /map /tf /tf_static /slam_toolbox/pose /ground_truth/pose
+
+Extracting ground truth
+pip install git+https://github.com/MichaelGrupp/evo.git
+evo_traj bag2 lidar_in_center_results /pose --save_as_tum
+
+Need to run bridge
+ros2 run ros_gz_bridge parameter_bridge '/world/default/dynamic_pose/info@geometry_msgs/msg/PoseArray@gz.msgs.Pose_V'
+
+
+This is ground truth
+ros2 topic echo /world/default/dynamic_pose/info --once
+
+
 
 ## SLAM
 
