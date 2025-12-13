@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ibex">
+
+  <ros2_control name="IbexDiffDirve" type="system">
+      <!-- <hardware>
+        <plugin>mock_components/GenericSystem</plugin> 
+        <param name="calculate_dynamics">true</param>
+      </hardware> -->
+
+      <hardware>
+        <plugin>ibex_control/ActuationSystemHardware</plugin>
+        
+        <!-- Front Left Actuator: Board 527164, Port 0 -->
+        <param name="fl_serial_num">527164</param>
+        <param name="fl_port_num">0</param>
+        
+        <!-- Front Right Actuator: Board 527164, Port 1 -->
+        <param name="fr_serial_num">527164</param>
+        <param name="fr_port_num">1</param>
+        
+        <!-- Rear Left Actuator: Board 527103, Port 0 -->
+        <param name="rl_serial_num">527103</param>
+        <param name="rl_port_num">0</param>
+        
+        <!-- Rear Right Actuator: Board 527103, Port 1 -->
+        <param name="rr_serial_num">527103</param>
+        <param name="rr_port_num">1</param>
+
+        <!-- Limit switches for safety monitoring (optional) -->
+        <param name="fl_limit_serial_num">527164</param>
+        <param name="fl_limit_port_num">5</param>
+        
+        <param name="fr_limit_serial_num">527164</param>
+        <param name="fr_limit_port_num">4</param>
+        
+        <param name="rl_limit_serial_num">527103</param>
+        <param name="rl_limit_port_num">5</param>
+        
+        <param name="rr_limit_serial_num">527103</param>
+        <param name="rr_limit_port_num">4</param>
+      </hardware>
+
+              <!-- Front Left Flipper -->
+        <joint name="front_left_flipper_flipper_joint">
+            <command_interface name="position">
+                <param name="min">0</param>
+                <param name="max">3.14159</param>  <!-- 0 to 180 degrees -->
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <!-- Front Right Flipper -->
+        <joint name="front_right_flipper_flipper_joint">
+            <command_interface name="position">
+                <param name="min">0</param>
+                <param name="max">3.14159</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <!-- Rear Left Flipper -->
+        <joint name="rear_left_flipper_flipper_joint">
+            <command_interface name="position">
+                <param name="min">0</param>
+                <param name="max">3.14159</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <!-- Rear Right Flipper -->
+        <joint name="rear_right_flipper_flipper_joint">
+            <command_interface name="position">
+                <param name="min">0</param>
+                <param name="max">3.14159</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+        
+  </ros2_control>
+</robot>
