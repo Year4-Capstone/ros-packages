@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" project_name="SearchAndSupport">
+
+  <include path="search_and_support.xml"/>
+
+<TreeNodesModel>
+  <Condition ID="NewVoiceCommand"/>
+  <Condition ID="BatteryOK"/>
+  <Condition ID="SensorsOK"/>
+  <Condition ID="MotorsOK"/>
+  <Condition ID="NoHumanInFront"/>
+  <Condition ID="HasFleetComm"/>
+  <Condition ID="MissionNotComplete"/>
+  <Condition ID="AnomalyDetected"/>
+  <Condition ID="PersonDetected"/>
+  <Condition ID="CollapseDetected"/>
+  <Condition ID="AudioCueDetected"/>
+  <Condition ID="RemoteModeActive"/>
+
+  <Action ID="HandleVoiceCommand"/>
+  <Action ID="ReturnHomeSafely"/>
+  <Action ID="InitializeMission"/>
+  <Action ID="MissionCompletedHook"/>
+  <Action ID="GetFleetCoverageMap"/>
+  <Action ID="DetectMapIssues"/>
+  <Action ID="PlanGlobalCoverage"/>
+  <Action ID="ClassifyAnomaly"/>
+  <Action ID="NoAnomalyFound"/>
+  <Action ID="NavigateTowardAudioSource"/>
+  <Action ID="SyncCoverageWithFleet"/>
+  <Action ID="GetNextCoverageGoal"/>
+  <Action ID="NavigateToCoverageGoal"/>
+  <Action ID="UpdateCoverageLocal"/>
+  <Action ID="StopMotion"/>
+  <Action ID="NavigateToPerson"/>
+  <Action ID="DropPayload"/>
+  <Action ID="EnterSafeMode"/>
+  <Action ID="OpenUIComms"/>
+  <Action ID="WaitForOperator"/>
+  <Action ID="MarkPersonLocationShared"/>
+  <Action ID="NavigateToAnomaly"/>
+  <Action ID="MarkCollapseOnMap"/>
+  <Action ID="BroadcastHazardToFleet"/>
+  <Action ID="EnableTeleop"/>
+</TreeNodesModel>
+</root>

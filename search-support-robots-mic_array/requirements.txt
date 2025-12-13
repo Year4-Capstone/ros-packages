@@ -1,0 +1,9 @@
+sounddevice
+soundfile
+numpy
+vosk
+pyusb==1.2.1
+libportaudio2
+libportaudiocpp0
+portaudio19-dev
+libusb-1.0-0-dev

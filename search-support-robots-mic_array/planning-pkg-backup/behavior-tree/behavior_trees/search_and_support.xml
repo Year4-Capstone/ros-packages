@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="MainTree">
+  <BehaviorTree ID="CoverageAndAnomalyHandling">
+    <Sequence name="CoverageStep">
+      <!-- <GetFleetCoverageMap/>
+      <DetectMapIssues/>
+      <PlanGlobalCoverage/> -->
+      <SubTree ID="HandleAnomalies"/>
+      <SubTree ID="LocalCoverageMove"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="HandleAnomalies">
+    <Fallback name="AnomalyHandler">
+      <Sequence name="PersonFoundBranch">
+        <!-- <AnomalyDetected/>
+        <ClassifyAnomaly/>
+        <PersonDetected/> -->
+        <SubTree ID="HandlePersonFound"/>
+      </Sequence>
+      <Sequence name="CollapseFoundBranch">
+        <!-- <AnomalyDetected/>
+        <ClassifyAnomaly/>
+        <CollapseDetected/> -->
+        <SubTree ID="HandleCollapse"/>
+      </Sequence>
+      <!-- <NoAnomalyFound/> -->
+    </Fallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="HandleCollapse">
+    <Sequence name="CollapseProtocol">
+      <StopMotion/>
+      <!-- <NavigateToAnomaly/>
+      <MarkCollapseOnMap/>
+      <BroadcastHazardToFleet/> -->
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="HandlePersonFound">
+    <Sequence name="RescuePersonProtocol">
+      <StopMotion/>
+      <!-- <NavigateToPerson/>
+      <DropPayload/>
+      <EnterSafeMode/>
+      <OpenUIComms/>
+      <WaitForOperator/>
+      <MarkPersonLocationShared/> -->
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="LocalCoverageMove">
+    <Fallback name="AudioOrCoverage">
+      <Sequence name="AudioGuidedSearch">
+        <Action ID="StopMotion"/>
+        <!-- <AudioCueDetected/>
+        <NavigateTowardAudioSource/> -->
+      </Sequence>
+      <Sequence name="CoverageNavigation">
+        <!-- <SyncCoverageWithFleet/>
+        <GetNextCoverageGoal/>
+        <NavigateToCoverageGoal/>
+        <UpdateCoverageLocal/> -->
+        <Action ID="MoveForward"/> <!-- temp? -->
+        <Action ID="StopMotion"/> <!-- temp? -->
+      </Sequence>
+    </Fallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="MainTree">
+    <ReactiveFallback name="TopLevel">
+      <!-- <Sequence name="VoiceCommandHandler">
+        <NewVoiceCommand/>
+        <HandleVoiceCommand/>
+      </Sequence> -->
+      <Sequence name="ManualControl">
+        <Condition ID="RemoteModeActive"/>
+        <Action ID="EnableTeleop"/>
+      </Sequence>
+      <Fallback name="AutonomousMode">
+        <Sequence name="SystemChecksAndMission">
+          <Sequence name="SystemChecks">
+            <Action ID="MoveForward"/>
+            <Action ID="StopMotion"/>
+            <!-- <BatteryOK/>
+            <SensorsOK/>
+            <MotorsOK/>
+            <NoHumanInFront/>
+            <HasFleetComm/> -->
+          </Sequence>
+          <SubTree ID="SearchAndRescueMission"/>
+        </Sequence>
+        <!-- <ReturnHomeSafely/> -->
+      </Fallback>
+    </ReactiveFallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="SearchAndRescueMission">
+    <Sequence name="InitializeAndSearch">
+      <!-- <InitializeMission/> -->
+      <Fallback name="MissionLoop">
+        <Sequence name="DoSearchStep">
+          <!-- <MissionNotComplete/> -->
+          <SubTree ID="CoverageAndAnomalyHandling"/>
+        </Sequence>
+        <!-- <MissionCompletedHook/> -->
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+
+  <TreeNodesModel>
+    <Condition ID="AnomalyDetected"/>
+    <Condition ID="AudioCueDetected"/>
+    <Condition ID="BatteryOK"/>
+    <Action ID="BroadcastHazardToFleet"/>
+    <Action ID="ClassifyAnomaly"/>
+    <Condition ID="CollapseDetected"/>
+    <Action ID="DetectMapIssues"/>
+    <Action ID="DropPayload"/>
+    <Action ID="EnterSafeMode"/>
+    <Action ID="GetFleetCoverageMap"/>
+    <Action ID="GetNextCoverageGoal"/>
+    <Action ID="HandleVoiceCommand"/>
+    <Condition ID="HasFleetComm"/>
+    <Action ID="InitializeMission"/>
+    <Action ID="MarkCollapseOnMap"/>
+    <Action ID="MarkPersonLocationShared"/>
+    <Action ID="MissionCompletedHook"/>
+    <Condition ID="MissionNotComplete"/>
+    <Condition ID="MotorsOK"/>
+    <Action ID="NavigateToAnomaly"/>
+    <Action ID="NavigateToCoverageGoal"/>
+    <Action ID="NavigateToPerson"/>
+    <Action ID="NavigateTowardAudioSource"/>
+    <Condition ID="NewVoiceCommand"/>
+    <Action ID="NoAnomalyFound"/>
+    <Condition ID="NoHumanInFront"/>
+    <Action ID="OpenUIComms"/>
+    <Condition ID="PersonDetected"/>
+    <Action ID="PlanGlobalCoverage"/>
+    <Action ID="ReturnHomeSafely"/>
+    <Condition ID="SensorsOK"/>
+    <Action ID="StopMotion"/>
+    <Action ID="SyncCoverageWithFleet"/>
+    <Action ID="UpdateCoverageLocal"/>
+    <Action ID="WaitForOperator"/>
+  </TreeNodesModel>
+
+</root>
