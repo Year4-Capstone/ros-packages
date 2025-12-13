@@ -28,6 +28,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'flipper_teleop = robot_teleop.flipper_teleop:main',
         ],
     },
 )

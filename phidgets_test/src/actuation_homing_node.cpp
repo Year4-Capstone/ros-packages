@@ -3,6 +3,7 @@
 #include "phidgets_test/phidgets_motor_driver.hpp"
 #include "phidgets_test/phidgets_limit_switch.hpp"
 #include "phidgets_test/action/homing_sequence.hpp"
+#include "std_msgs/msg/bool.hpp" 
 
 #include <memory>
 #include <array>
@@ -56,6 +57,12 @@ public:
             limit_switches_[i]->init();
         }
 
+        // NEW: Create publisher for homing completion status
+        // Uses transient_local QoS so late subscribers receive the last message
+        homing_complete_pub_ = this->create_publisher<std_msgs::msg::Bool>(
+            "/actuators/homing_complete", 
+            rclcpp::QoS(10).transient_local());
+
         // Create action server
         this->action_server_ = rclcpp_action::create_server<HomingSequence>(
             this,
@@ -80,6 +87,8 @@ private:
     rclcpp_action::Server<HomingSequence>::SharedPtr action_server_;
     std::array<std::atomic<bool>, 4> limit_triggered_;
     const double BACKOFF_ANGLE = 7.5; // degrees
+
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr homing_complete_pub_;
 
     rclcpp_action::GoalResponse handle_goal(
         const rclcpp_action::GoalUUID &,
@@ -128,11 +137,24 @@ private:
             }
         }
 
+        bool all_successful = true;
+
         // Prepare final result
         for (size_t i = 0; i < 4; ++i) {
             result->success[i] = (feedback->status[i] == 2);  // 2 = completed
             result->positions[i] = motors_[i]->getPositionDegs();
+            
+            // NEW: Track if any motor failed
+            if (!result->success[i]) {
+                all_successful = false;
+            }
         }
+
+        // NEW: Publish homing completion status
+        // This notifies the hardware interface that homing is complete
+        auto homing_msg = std_msgs::msg::Bool();
+        homing_msg.data = all_successful;
+        homing_complete_pub_->publish(homing_msg);
 
         if (goal_handle->is_canceling()) {
             goal_handle->canceled(result);

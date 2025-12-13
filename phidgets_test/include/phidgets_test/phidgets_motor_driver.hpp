@@ -175,7 +175,7 @@ private:
         170,
         0.02173913, // update
         2.0,   // no idea if this works 
-        1,  // update 
+        0.2,  // update 
     };
 };
 

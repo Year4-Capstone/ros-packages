@@ -4,6 +4,7 @@ from launch.event_handlers import OnProcessStart
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     # --- Package Name ---
@@ -17,13 +18,11 @@ def generate_launch_description():
         [pkg_robot_bringup, 'config', 'diff_drive_controller.yaml']
     )
     
-    # xacro_file = PathJoinSubstitution(
-    #     [pkg_robot_description, 'urdf', 'ibex.urdf.xacro']
-    # )
-    
     xacro_file = PathJoinSubstitution(
-        [pkg_robot_description, 'urdf', 'cad_urdf.urdf.xacro']
+        [pkg_robot_description, 'urdf', 'ibex.urdf.xacro']
     )
+    
+
 
     rviz_config_path = PathJoinSubstitution(
         [pkg_robot_description, 'rviz', 'ibex.rviz']
@@ -32,7 +31,11 @@ def generate_launch_description():
     robot_description_content = Command(
         [FindExecutable(name='xacro'), ' ', xacro_file]
     )
-    robot_description = {'robot_description': robot_description_content}
+    
+    # Wrap the content to ensure it is treated as a string, not YAML
+    robot_description = {
+        'robot_description': ParameterValue(robot_description_content, value_type=str)
+    }
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -75,10 +78,25 @@ def generate_launch_description():
         output='screen',
     )
 
-    delayed_diff_drive_spawner = RegisterEventHandler(
+    flipper_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['flipper_position_controller', '--controller-manager', '/controller_manager'],
+        output='screen',
+    )
+
+
+    # delayed_diff_drive_spawner = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=controller_manager_node,
+    #         on_start=[diff_drive_base_controller_spawner],
+    #     )
+    # )
+
+    delayed_flipper_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=controller_manager_node,
-            on_start=[diff_drive_base_controller_spawner],
+            on_start=[flipper_controller_spawner],
         )
     )
 
@@ -93,6 +111,7 @@ def generate_launch_description():
         node_robot_state_publisher,
         controller_manager_node,
         rviz_node,
-        delayed_diff_drive_spawner,
+        # delayed_diff_drive_spawner,
+        delayed_flipper_spawner,
         delayed_joint_broad_spawner,
     ])

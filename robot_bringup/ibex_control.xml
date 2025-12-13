@@ -6,4 +6,12 @@
       Hardware interface for Ibex differential drive robot with Phidgets motors
     </description>
   </class>
+  
+  <class name="ibex_control/ActuationSystemHardware" 
+         type="ibex_control::ActuationSystemHardware" 
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for Ibex flipper actuators with Phidgets motors
+    </description>
+  </class>
 </library>

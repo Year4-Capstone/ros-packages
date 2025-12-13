@@ -69,10 +69,21 @@ def generate_launch_description():
         output='screen'
     )
 
+    flipper_node = Node(
+        package='robot_teleop',
+        executable='flipper_teleop',  # Must match 'console_scripts' in setup.py
+        name='flipper_teleop',
+        output='screen',
+        parameters=[
+            {'use_sim_time': use_sim_time}
+        ]
+    )
+
     return LaunchDescription([
         publish_stamped_arg,
         cmd_vel_topic_arg,
         use_sim_time_arg,
         joy_node,    
-        teleop_node    
+        teleop_node,
+        flipper_node    
     ])

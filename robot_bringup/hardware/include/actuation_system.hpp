@@ -33,6 +33,7 @@
 
 #include "phidgets_motor_driver.hpp"
 #include "phidgets_limit_switch.hpp"
+#include "std_msgs/msg/bool.hpp" 
 
 namespace ibex_control
 {
@@ -71,8 +72,12 @@ private:
   // Last position for velocity calculation
   std::array<double, 4> last_pos_rads_ {{0.0, 0.0, 0.0, 0.0}};
   
-  // Homing status tracking
+  // Per-motor homing flags - true if motor has been homed and is ready for use
   std::array<bool, 4> is_homed_ {{false, false, false, false}};
+  // Global homing flag - true only when all motors are homed
+  bool all_homed_ = false;
+
+  std::array<bool, 4> limit_triggered_ {{false, false, false, false}};
   
   // Phidget Motor Controllers for actuators
   std::unique_ptr<PhidgetMotorController> motor_fl_;  // Front Left
@@ -89,8 +94,8 @@ private:
   // Joint indices
   size_t idx_fl_ = 0;  // Front left flipper index
   size_t idx_fr_ = 0;  // Front right flipper index
-  size_t idx_bl_ = 0;  // Rear left flipper index
-  size_t idx_br_ = 0;  // Rear right flipper index
+  size_t idx_rl_ = 0;  // Rear left flipper index
+  size_t idx_rr_ = 0;  // Rear right flipper index
 
   // Position control parameters
   const double Kp_ = 2.0;                    // Proportional gain for position control
@@ -98,6 +103,8 @@ private:
   const double MAX_VELOCITY_ = 0.5;          // Maximum velocity in rad/s
   const double MIN_POSITION_ = 0.0;          // Minimum position limit (radians)
   const double MAX_POSITION_ = 3.14159;      // Maximum position limit (radians)
+  
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr homing_complete_sub_;
 };
 
 }  // namespace ibex_control

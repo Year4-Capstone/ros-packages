@@ -12,6 +12,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(phidgets_test REQUIRED)
+find_package(std_msgs REQUIRED)
 
 find_library(PHIDGET22_LIBRARY phidget22)
 if(NOT PHIDGET22_LIBRARY)
@@ -20,6 +21,7 @@ endif()
 
 add_library(ibex_control SHARED
   hardware/diffbot_system.cpp
+  hardware/actuation_system.cpp
 )
 
 ament_target_dependencies(ibex_control
@@ -27,6 +29,7 @@ ament_target_dependencies(ibex_control
   rclcpp_lifecycle
   hardware_interface
   pluginlib
+  std_msgs
   phidgets_test
 )
 

@@ -11,6 +11,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 find_library(PHIDGET22_LIBRARY phidget22)
@@ -58,6 +59,7 @@ target_link_libraries(limit_switch_test
 add_executable(actuation_homing_node src/actuation_homing_node.cpp)
 ament_target_dependencies(actuation_homing_node 
   rclcpp 
+  std_msgs
   rclcpp_action)
 add_dependencies(actuation_homing_node ${cpp_typesupport_target})
 target_include_directories(actuation_homing_node PUBLIC
