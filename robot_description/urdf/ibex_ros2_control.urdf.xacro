@@ -2,12 +2,12 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ibex">
 
   <ros2_control name="IbexDiffDirve" type="system">
-      <hardware>
+      <!-- <hardware>
         <plugin>mock_components/GenericSystem</plugin> 
         <param name="calculate_dynamics">true</param>
-      </hardware>
+      </hardware> -->
 
-      <!-- <hardware>
+      <hardware>
         <plugin>ibex_control/DiffBotSystemHardware</plugin>
         
         <param name="bl_serial_num">527103</param>
@@ -20,7 +20,7 @@
         <param name="fr_serial_num">527164</param>
         <param name="fr_port_num">3</param>
 
-      </hardware> -->
+      </hardware>
 
       <joint name="front_left_wheel_joint">
         <command_interface name="velocity">
