@@ -9,19 +9,22 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
+
 find_package(phidgets_test REQUIRED)
 
+# System Library
 find_library(PHIDGET22_LIBRARY phidget22)
 if(NOT PHIDGET22_LIBRARY)
   message(FATAL_ERROR "Phidget22 library not found")
 endif()
 
+
 add_library(ibex_control SHARED
   hardware/diffbot_system.cpp
 )
-
 ament_target_dependencies(ibex_control
   rclcpp
   rclcpp_lifecycle
@@ -29,34 +32,22 @@ ament_target_dependencies(ibex_control
   pluginlib
   phidgets_test
 )
-
 target_link_libraries(ibex_control
   ${PHIDGET22_LIBRARY}
 )
-
 pluginlib_export_plugin_description_file(hardware_interface ibex_control.xml)
 
-install(TARGETS ibex_control
-  DESTINATION lib
-)
-
-install(
-  DIRECTORY hardware/include/
-  DESTINATION include
-)
-
-install(
-  DIRECTORY config launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
-# 4. Install the library and headers
 install(
   TARGETS ibex_control
   EXPORT export_ibex_control
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
+)
+
+install(
+  DIRECTORY hardware/include/
+  DESTINATION include
 )
 
 install(

@@ -17,12 +17,8 @@ def generate_launch_description():
         [pkg_robot_bringup, 'config', 'diff_drive_controller.yaml']
     )
     
-    # xacro_file = PathJoinSubstitution(
-    #     [pkg_robot_description, 'urdf', 'ibex.urdf.xacro']
-    # )
-    
     xacro_file = PathJoinSubstitution(
-        [pkg_robot_description, 'urdf', 'cad_urdf.urdf.xacro']
+        [pkg_robot_description, 'urdf', 'ibex.urdf.xacro']
     )
 
     rviz_config_path = PathJoinSubstitution(
