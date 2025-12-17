@@ -31,7 +31,13 @@ def generate_launch_description():
     # 1. Launch Gazebo (which spawns the robot)
     gazebo_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_path),
-        launch_arguments={'use_sim_time': 'true'}.items()
+        launch_arguments={
+            'world': PathJoinSubstitution([
+                pkg_robot_description,
+                'world',
+                'small_house.world'
+            ])
+        }.items()
     )
 
     # 2. Launch Rviz
@@ -43,18 +49,63 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    slam_launch = IncludeLaunchDescription(
+    # slam_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         FindPackageShare('slam_toolbox'),
+    #         '/launch/online_async_launch.py'
+    #     ]),
+    #     launch_arguments={
+    #         'use_sim_time': 'true',
+    #         'params_file': PathJoinSubstitution([
+    #             pkg_robot_bringup, 'config', 'slam_params.yaml'
+    #         ])
+    #     }.items()
+    # )
+
+    nav2_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
-            FindPackageShare('slam_toolbox'),
-            '/launch/online_async_launch.py'
+            FindPackageShare('nav2_bringup'),
+            '/launch/bringup_launch.py'
         ]),
         launch_arguments={
             'use_sim_time': 'true',
-            'params_file': PathJoinSubstitution([
-                pkg_robot_bringup, 'config', 'slam_params.yaml'
-            ])
+            'map': '/home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/small_house/map.yaml',
+            'params_file': PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml']),
+            'autostart': 'true',
         }.items()
     )
+
+    
+
+    # nav2_map_server = Node(
+    #     package="nav2_map_server",
+    #     executable="map_server",
+    #     name="map_server",
+    #     output="screen",
+    #     parameters=[
+    #         os.path.join(
+    #             bumperbot_navigation_pkg,
+    #             "config",
+    #             "nav2_params.yaml"
+    #         ),
+    #         {"use_sim_time": use_sim_time}
+    #     ],
+    # )
+
+    # nav2_amcl = Node(
+    #     package="nav2_amcl",
+    #     executable="amcl",
+    #     name="amcl",
+    #     output="screen",
+    #     parameters=[
+    #         os.path.join(
+    #             bumperbot_navigation_pkg,
+    #             "config",
+    #             "nav2_params.yaml"
+    #         ),
+    #         {"use_sim_time": use_sim_time}
+    #     ],
+    # )
 
     # --- ROS 2 Control Spawners ---
     # Launched immediately without event handlers. 
@@ -93,7 +144,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         gazebo_sim,
-        slam_launch,
+        # slam_launch,
+        nav2_launch,
         gz_gt_bridge,
         gt_extractor_node,
         rviz_node,
