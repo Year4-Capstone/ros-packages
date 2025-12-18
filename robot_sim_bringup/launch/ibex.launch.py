@@ -5,6 +5,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import GroupAction
+from launch_ros.actions import PushRosNamespace, SetRemap
 
 def generate_launch_description():
     # --- Package Name ---
@@ -62,50 +64,43 @@ def generate_launch_description():
     #     }.items()
     # )
 
-    nav2_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            FindPackageShare('nav2_bringup'),
-            '/launch/bringup_launch.py'
-        ]),
-        launch_arguments={
-            'use_sim_time': 'true',
-            'map': '/home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/small_house/map.yaml',
-            'params_file': PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml']),
-            'autostart': 'true',
-        }.items()
-    )
+    # nav2_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         FindPackageShare('nav2_bringup'),
+    #         '/launch/bringup_launch.py'
+    #     ]),
+    #     launch_arguments={
+    #         'use_sim_time': 'true',
+    #         'map': '/home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/small_house/map.yaml',
+    #         'params_file': PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml']),
+    #         'autostart': 'true',
+    #     }.items()
+    # )
 
+    nav2_launch = GroupAction(
+            actions=[
+                SetRemap(src='/cmd_vel', dst='/cmd_vel_nav'),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource([
+                        FindPackageShare('nav2_bringup'),
+                        '/launch/bringup_launch.py'
+                    ]),
+                    launch_arguments={
+                        'use_sim_time': 'true',
+                        'params_file': PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml']),
+                        'autostart': 'true',
+                    }.items(),
+                ),
+            ]
+        )
     
-
-    # nav2_map_server = Node(
-    #     package="nav2_map_server",
-    #     executable="map_server",
-    #     name="map_server",
-    #     output="screen",
-    #     parameters=[
-    #         os.path.join(
-    #             bumperbot_navigation_pkg,
-    #             "config",
-    #             "nav2_params.yaml"
-    #         ),
-    #         {"use_sim_time": use_sim_time}
-    #     ],
-    # )
-
-    # nav2_amcl = Node(
-    #     package="nav2_amcl",
-    #     executable="amcl",
-    #     name="amcl",
-    #     output="screen",
-    #     parameters=[
-    #         os.path.join(
-    #             bumperbot_navigation_pkg,
-    #             "config",
-    #             "nav2_params.yaml"
-    #         ),
-    #         {"use_sim_time": use_sim_time}
-    #     ],
-    # )
+    collision_monitor_node = Node(
+        package='nav2_collision_monitor',
+        executable='collision_monitor',
+        name='collision_monitor',
+        output='screen',
+        parameters=[PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml'])]
+    )
 
     # --- ROS 2 Control Spawners ---
     # Launched immediately without event handlers. 
@@ -123,6 +118,7 @@ def generate_launch_description():
         executable='spawner',
         arguments=['diff_drive_base_controller', '--param-file', controller_config_file],
         output='screen',
+        remappings=[('/diff_drive_base_controller/cmd_vel', '/cmd_vel')] 
     )
 
     # Ground truth of robot pose
@@ -145,6 +141,7 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo_sim,
         # slam_launch,
+        collision_monitor_node,
         nav2_launch,
         gz_gt_bridge,
         gt_extractor_node,

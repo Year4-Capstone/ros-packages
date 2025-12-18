@@ -12,8 +12,8 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
 
-    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'cave_world.world')
-    # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
+    # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'cave_world.world')
+    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
     #urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
     urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
 
@@ -66,7 +66,7 @@ def generate_launch_description():
         arguments=[
             '-name', 'ibex_robot',
             '-topic', 'robot_description', # Reads the URDF from the parameter set above
-            '-x', '0', '-y', '0', '-z', '0' # Initial pose
+            '-x', '0', '-y', '0', '-z', '0.5' # Initial pose
         ]
     )
     
