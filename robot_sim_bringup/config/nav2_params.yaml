@@ -15,11 +15,15 @@ planner_server:
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
 
+docking_server:
+  ros__parameters:
+    enabled: false
+
 controller_server:
   ros__parameters:
     use_sim_time: true
     controller_plugins: ["FollowPath"]
-    topic_poly: "cmd_vel"
+    # topic_poly: "cmd_vel"
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       desired_linear_vel: 0.5
@@ -48,7 +52,7 @@ global_costmap:
         map_subscribe_transient_local: true
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
-        observation_sources: scan
+        observation_sources: ["scan"]
         scan:
           topic: /scan
           min_obstacle_height: 0.15  # Ignore anything below 15cm (robot's own body)
@@ -63,7 +67,7 @@ local_costmap:
   local_costmap:
     ros__parameters:
       use_sim_time: true
-      base_frame_id: "base_footprint"
+      # base_frame_id: "base_footprint"
       global_frame: odom
       robot_base_frame: base_footprint
       footprint_clearing_enabled: true
@@ -107,7 +111,7 @@ collision_monitor:
       min_points: 10
       visualize: true
       polygon_pub_topic: "polygon_stop"
-      points: "[[0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25]]"
+      points: [0.25, 0.25, 0.25, -0.25, -0.25, -0.25, -0.25, 0.25]
     observation_sources: ["scan"]
     scan:
       type: "scan"

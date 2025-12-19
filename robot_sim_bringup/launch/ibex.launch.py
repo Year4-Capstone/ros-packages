@@ -94,13 +94,13 @@ def generate_launch_description():
             ]
         )
     
-    collision_monitor_node = Node(
-        package='nav2_collision_monitor',
-        executable='collision_monitor',
-        name='collision_monitor',
-        output='screen',
-        parameters=[PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml'])]
-    )
+    # collision_monitor_node = Node(
+    #     package='nav2_collision_monitor',
+    #     executable='collision_monitor',
+    #     name='collision_monitor',
+    #     output='screen',
+    #     parameters=[PathJoinSubstitution([pkg_robot_bringup, 'config', 'nav2_params.yaml'])]
+    # )
 
     # --- ROS 2 Control Spawners ---
     # Launched immediately without event handlers. 
@@ -141,7 +141,7 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo_sim,
         # slam_launch,
-        collision_monitor_node,
+        # collision_monitor_node,
         nav2_launch,
         gz_gt_bridge,
         gt_extractor_node,
