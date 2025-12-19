@@ -13,19 +13,23 @@ def generate_launch_description():
     gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
 
     # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'cave_world.world')
-    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
+    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'small_house.world')
+    # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
     #urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
     urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
 
     # Get the package share directory for meshes
     package_share_dir = get_package_share_directory('robot_sim_description')
     robot_sim_description_parent_path = os.path.dirname(package_share_dir)
-    world_dir = os.path.join(package_share_dir, 'world/models')
+    world_dir = os.path.join(package_share_dir, 'world')
     combined_resource_path = f"{robot_sim_description_parent_path}:{world_dir}"
     
+    aws_models_path = os.path.expanduser("~/aws_models/models")
+
     default_paths = [
-    os.path.expanduser("~/.gz/models"),
-    "/usr/share/gz/models",
+        aws_models_path,
+        os.path.expanduser("~/.gz/models"),
+        "/usr/share/gz/models",
     ]
 
     combined = ":".join(default_paths + [combined_resource_path])
