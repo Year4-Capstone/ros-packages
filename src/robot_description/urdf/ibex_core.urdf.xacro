@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="cad_urdf">
+
+    
+    <!-- Mesh file path variables -->
+    <xacro:property name="base_file_path" value="package://robot_description/meshes/" />
+    <xacro:property name="mesh_base_link"           value="${base_file_path}base_link.stl" />
+    <xacro:property name="mesh_front_left_wheel"    value="${base_file_path}wheel_front_left.stl" />
+    <xacro:property name="mesh_front_right_wheel"   value="${base_file_path}wheel_front_right.stl" />
+    <xacro:property name="mesh_rear_left_wheel"     value="${base_file_path}wheel_rear_left.stl" />
+    <xacro:property name="mesh_rear_right_wheel"    value="${base_file_path}wheel_rear_right.stl" />
+
+    <xacro:property name="mesh_front_left_flipper"  value="${base_file_path}flipper_front_left.stl" />
+    <xacro:property name="mesh_front_right_flipper" value="${base_file_path}flipper_front_right.stl" />
+    <xacro:property name="mesh_rear_left_flipper"   value="${base_file_path}flipper_front_left.stl" />
+    <xacro:property name="mesh_rear_right_flipper"  value="${base_file_path}flipper_rear_right.stl" />
+
+    <!-- Mesh scale -->
+    <xacro:property name="mesh_scale"               value="0.001 0.001 0.001" />
+
+    <xacro:property name="chassis_mass" value="5.0" /> 
+    <xacro:property name="wheel_mass" value="0.5" />
+    <xacro:property name="wheel_radius" value="0.102" />
+    <xacro:property name="wheel_thickness" value="0.069" />
+
+    <xacro:property name="chassis_length"   value="0.4096"/>   <!-- 2 ft -->
+    <xacro:property name="chassis_width"    value="0.9144"/>   <!-- 2 ft -->
+    <xacro:property name="chassis_height"   value="0.0762"/>   <!-- 6 in -->
+
+
+    <xacro:property name="wheel_offset_y" value="${0.2794 + wheel_thickness}"/>
+    <xacro:property name="wheel_offset_x" value="0.2708"/>
+    <xacro:property name="wheel_offset_z" value="0.0516"/>
+    <xacro:property name="mesh_rpy"       value="0 0 -1.57079"/>
+
+    <xacro:property name="wheel_ixx" value="${(wheel_mass/12.0) * (3*wheel_radius*wheel_radius + wheel_thickness*wheel_thickness)}"/>
+    <xacro:property name="wheel_iyy" value="${(wheel_mass/2.0)  * (wheel_radius*wheel_radius)}"/>
+    <xacro:property name="wheel_izz" value="${wheel_ixx}"/>
+    
+    <xacro:property name="chassis_ixx" value="${(chassis_mass / 12.0) * (chassis_height*chassis_height + chassis_width*chassis_width)}"/>
+    <xacro:property name="chassis_iyy" value="${(chassis_mass / 12.0) * (chassis_length*chassis_length + chassis_height*chassis_height)}"/>
+    <xacro:property name="chassis_izz" value="${(chassis_mass / 12.0) * (chassis_length*chassis_length + chassis_width*chassis_width)}"/>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0" />
+    </material>
+
+    <material name="silver">
+        <color rgba="0.700 0.700 0.700 1.000"/>
+    </material>
+
+    <link name="base_footprint" />
+
+    <!-- Flipper Macro with Fixed Joint -->
+    <xacro:macro name="flipper_macro" params="name mesh_file origin_xyz origin_rpy inertial_origin_xyz inertial_mass inertial_ixx inertial_iyy inertial_izz inertial_ixy inertial_iyz inertial_ixz joint_origin_xyz joint_origin_rpy">
+        <link name="${name}">
+            <inertial>
+                <origin xyz="${inertial_origin_xyz}" rpy="0 0 0"/>
+                <mass value="${inertial_mass}"/>
+                <inertia ixx="${inertial_ixx}" iyy="${inertial_iyy}" izz="${inertial_izz}" 
+                         ixy="${inertial_ixy}" iyz="${inertial_iyz}" ixz="${inertial_ixz}"/>
+            </inertial>
+            <visual>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+                <material name="silver"/>
+            </visual>
+            <collision>
+                <origin xyz="${origin_xyz}" rpy="${origin_rpy}"/>
+                <geometry>
+                    <mesh filename="${mesh_file}" scale="${mesh_scale}"/>
+                </geometry>
+            </collision>
+        </link>
+        
+        <joint name="${name}_flipper_joint" type="fixed">
+            <origin xyz="${joint_origin_xyz}" rpy="${joint_origin_rpy}"/>
+            <parent link="base_link"/>
+            <child link="${name}"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Wheel Macro with Continuous Joint -->
+    <xacro:macro name="wheel_macro" params="name_prefix x_offset y_offset z_offset">
+        <link name="${name_prefix}_wheel_link">
+        <inertial>
+            <mass value="${wheel_mass}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="${(wheel_mass/12.0) * (3*wheel_radius*wheel_radius + wheel_thickness*wheel_thickness)}" 
+                        ixy="0.0" ixz="0.0" 
+                        iyy="${(wheel_mass/2.0) * (wheel_radius*wheel_radius)}" 
+                        iyz="0.0" 
+                        izz="${(wheel_mass/12.0) * (3*wheel_radius*wheel_radius + wheel_thickness*wheel_thickness)}" />
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" /> 
+            <material name="black" />
+        </visual>
+        <collision>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_thickness}" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" /> 
+            </collision>
+    </link>
+
+            <joint name="${name_prefix}_wheel_joint" type="continuous">
+        <parent link="base_link" />
+        <child link="${name_prefix}_wheel_link" />
+        <origin xyz="${x_offset} ${y_offset} ${z_offset}" rpy="0 0 0" />
+                    <axis xyz="0 1 0" />
+    </joint>
+    </xacro:macro>
+
+
+    <!-- Base Link -->
+    <link name="base_link">
+        <inertial>
+            <origin xyz="-2.1660968987257366e-16 -1.7328775189805893e-16 0.028711464160038225" rpy="0 0 0"/>
+            <mass value="${chassis_mass}"/>
+            <inertia ixx="${chassis_ixx}" iyy="${chassis_iyy}" izz="${chassis_izz}" ixy="0" iyz="0" ixz="0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="${mesh_rpy}"/>
+            <geometry>
+                <mesh filename="${mesh_base_link}" scale="${mesh_scale}"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${chassis_height / 2.0}" rpy="${mesh_rpy}"/>  <!-- Center at half height -->
+            <geometry>
+                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 0.0484" rpy="0 0 0"/>
+    </joint>
+
+            <link name="imu_link">
+        <inertial>
+            <origin xyz="-0.00552433659106688 0.000168210391520346 0.000514000497342681" rpy="0 0 0" />
+            <mass value="0.000528415362211671" />
+            <inertia ixx="1.46176048428261E-08" ixy="1.40015117949421E-10" ixz="-1.99633872937403E-12"
+                    iyy="8.59662482954888E-09" iyz="7.52375112767959E-12"
+                    izz="2.30279421279312E-08" />
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+            <material name="black" />
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+        </collision>
+    </link>
+      
+    <joint name="imu_joint" type="fixed">
+        <origin xyz="0.45 -0.30 0.07" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="imu_link" />
+    </joint>
+
+
+    <link name="laser">
+        <inertial>
+            <origin xyz="-0.011945780406062 -0.000381929217680526 -0.0170649378129477" rpy="0 0 0" />
+            <mass value="0.073084435549317" />
+            <inertia ixx="1.96074931730795E-05" ixy="-3.62091076640009E-07" ixz="4.28230084046735E-07"
+                    iyy="2.40983835136327E-05" iyz="1.50180909250652E-08"
+                    izz="4.14184164228595E-05" />
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+            <cylinder radius="0.035" length="0.05"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+            <cylinder radius="0.035" length="0.05"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="laser_joint" type="fixed">
+        <origin xyz="0.45 0 0.12" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="laser" />
+    </joint>
+
+
+    <!-- Wheels     -->
+    <xacro:wheel_macro name_prefix="front_left" 
+                        x_offset="${wheel_offset_x}" 
+                        y_offset="${wheel_offset_y}"
+                        z_offset="${wheel_offset_z}" />
+
+    <xacro:wheel_macro name_prefix="front_right" 
+                        x_offset="${wheel_offset_x}" 
+                        y_offset="${-wheel_offset_y}"
+                        z_offset="${wheel_offset_z}" />
+    
+    <xacro:wheel_macro name_prefix="rear_left" 
+                        x_offset="${-wheel_offset_x}" 
+                        y_offset="${wheel_offset_y}"
+                        z_offset="${wheel_offset_z}" />
+
+    <xacro:wheel_macro name_prefix="rear_right" 
+                        x_offset="${-wheel_offset_x}" 
+                        y_offset="${-wheel_offset_y}"
+                        z_offset="${wheel_offset_z}" />
+
+    <!-- Flipper and Wheel Links using Macros -->
+    <xacro:flipper_macro 
+        name="front_left_flipper"
+        mesh_file="${mesh_front_left_flipper}"
+        origin_xyz="-0.3108 -0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="0.044450000334023076 0.005646153366949069 0.249739430595357"
+        inertial_mass="0.01"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.262219"
+        inertial_izz="0.040985"
+        inertial_ixy="-0.0"
+        inertial_iyz="0.025816"
+        inertial_ixz="-0.0"
+        joint_origin_xyz="0.3108 0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+
+    <xacro:flipper_macro 
+        name="front_right_flipper"
+        mesh_file="${mesh_front_right_flipper}"
+        origin_xyz="-0.3108 0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="0.044450000334053885 0.01614155751815055 0.24928119135390578"
+        inertial_mass="0.01"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.256055"
+        inertial_izz="0.047149"
+        inertial_ixy="0.0"
+        inertial_iyz="-0.044632"
+        inertial_ixz="-0.0"
+        joint_origin_xyz="0.3108 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+<!-- bad one -->
+    <xacro:flipper_macro 
+        name="rear_left_flipper"
+        mesh_file="${mesh_rear_left_flipper}"
+        origin_xyz="0.3108 0.4294 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="-0.044450000334023076 0.22872695820013356 0.10042729128305261"
+        inertial_mass="0.01"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.100275"
+        inertial_izz="0.202929"
+        inertial_ixy="0.0"
+        inertial_iyz="-0.101331"
+        inertial_ixz="0.0"
+        joint_origin_xyz="-0.3108 0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+ 
+    <xacro:flipper_macro 
+        name="rear_right_flipper"
+        mesh_file="${mesh_rear_right_flipper}"
+        origin_xyz="0.3108 0.2794 -0.0516"
+        origin_rpy="0 0 -1.57079"
+        inertial_origin_xyz="-0.044450000334023076 0.016141557518147776 0.24928119135391122"
+        inertial_mass="0.01"
+        inertial_ixx="0.281827"
+        inertial_iyy="0.256055"
+        inertial_izz="0.047149"
+        inertial_ixy="-0.0"
+        inertial_iyz="-0.044632"
+        inertial_ixz="0.0"
+        joint_origin_xyz="-0.3108 -0.2794 0.0516"
+        joint_origin_rpy="0 0 0" />
+
+</robot>
