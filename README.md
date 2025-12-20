@@ -1,4 +1,16 @@
-# ros-packages
+# ros2_ws
+
+## Quick Links
+
+| Package | Description |
+|---------|-------------|
+| [robot_description](src/robot_description/README.md) | URDF models, Gazebo simulation, visualization |
+| [robot_bringup](src/robot_bringup/README.md) | Hardware interfaces, launch configurations |
+| [robot_teleop](src/robot_teleop/README.md) | Gamepad teleoperation setup |
+| [phidgets_test](src/phidgets_test/README.md) | Phidget motor drivers and testing tools |
+| [diff_drive_example](src/diff_drive_example/README.md) | Example differential drive implementations |
+
+# Overview
 
 ros2 control extra bit articulated robots
 change wheels to speheres to remove firction?
