@@ -7,6 +7,10 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /Map1
+        - /Map1/Topic1
+        - /PoseWithCovariance1
+        - /PoseWithCovariance1/Topic1
       Splitter Ratio: 0.5
     Tree Height: 542
   - Class: rviz_common/Selection
@@ -26,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Visualization Manager:
   Class: ""
   Displays:
@@ -75,7 +79,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        front_left_flipper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         front_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_flipper:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -85,7 +99,27 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_left_flipper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rear_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_right_flipper:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -114,11 +148,27 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        front_left_flipper:
+          Value: true
         front_left_wheel_link:
+          Value: true
+        front_right_flipper:
           Value: true
         front_right_wheel_link:
           Value: true
+        imu_link:
+          Value: true
+        laser_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        rear_left_flipper:
+          Value: true
         rear_left_wheel_link:
+          Value: true
+        rear_right_flipper:
           Value: true
         rear_right_wheel_link:
           Value: true
@@ -128,46 +178,129 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        base_footprint:
-          base_link:
-            front_left_wheel_link:
-              {}
-            front_right_wheel_link:
-              {}
-            rear_left_wheel_link:
-              {}
-            rear_right_wheel_link:
-              {}
+        map:
+          {}
+        odom:
+          base_footprint:
+            base_link:
+              front_left_flipper:
+                {}
+              front_left_wheel_link:
+                {}
+              front_right_flipper:
+                {}
+              front_right_wheel_link:
+                {}
+              imu_link:
+                {}
+              laser_link:
+                {}
+              rear_left_flipper:
+                {}
+              rear_left_wheel_link:
+                {}
+              rear_right_flipper:
+                {}
+              rear_right_wheel_link:
+                {}
       Update Interval: 0
       Value: true
-    - Class: rviz_default_plugins/LaserScan
-      Name: LaserScan
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/LaserScan
+      Color: 255; 0; 0
+      Color Transformer: Intensity
+      Decay Time: 0
       Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 0
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.029999999329447746
+      Style: Flat Squares
       Topic:
         Depth: 5
         Durability Policy: Volatile
+        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /scan
-      Size (m): 0.03
-      Color: 255; 0; 0
-      Queue Size: 10
-    - Class: rviz_default_plugins/Map
-      Name: Map
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Alpha: 0.699999988079071
+      Binary representation: false
+      Binary threshold: 100
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
       Enabled: true
+      Name: Map
       Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Update Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /map
-      Alpha: 0.7
-      Color Scheme: map
-
+        Value: /map_updates
+      Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/PoseWithCovariance
+      Color: 255; 25; 0
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: PoseWithCovariance
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /amcl_pose
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -210,7 +343,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.4508087635040283
+      Distance: 4.425405979156494
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -225,10 +358,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
+      Pitch: 0.8103979229927063
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.785398006439209
+      Yaw: 0.7853981256484985
     Saved: ~
 Window Geometry:
   Displays:
@@ -246,5 +379,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 1861
-  Y: 129
+  X: 1131
+  Y: 165

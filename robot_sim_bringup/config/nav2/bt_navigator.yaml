@@ -1,3 +1,4 @@
 bt_navigator:
   ros__parameters:
     use_sim_time: true
+    use_stamped_vel: true
