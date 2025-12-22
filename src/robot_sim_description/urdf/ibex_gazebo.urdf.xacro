@@ -1,44 +1,37 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ibex">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ibex_gazebo">
 
+    <!-- Gazebo ROS2 Control Plugin -->
     <gazebo>
-    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-        <parameters>$(find robot_sim_bringup)/config/diff_drive_controller.yaml</parameters>
-    </plugin>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+            <parameters>$(find robot_sim_bringup)/config/diff_drive_controller.yaml</parameters>
+        </plugin>
     </gazebo>
 
-            <gazebo>
+    <!-- Gazebo Sensors Plugin -->
+    <gazebo>
         <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
             <render_engine>ogre2</render_engine>
         </plugin>
     </gazebo>
 
-    <!-- <gazebo>
-        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
-        </plugin>
-        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
-            <render_engine>ogre2</render_engine>
-        </plugin>
-    </gazebo> -->
-
-
+    <!-- IMU Sensor -->
     <gazebo reference="imu_link">
         <sensor name="imu_sensor" type="imu">
             <topic>imu/out</topic>
             <always_on>true</always_on>
             <update_rate>100</update_rate>
-
             <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
         </sensor>
     </gazebo>
 
+    <!-- LIDAR Sensor -->
     <gazebo reference="laser_link">
         <sensor name="lidar" type="gpu_lidar">
             <always_on>true</always_on>
             <visualize>true</visualize>
             <topic>scan</topic>
             <update_rate>5</update_rate>
-            <gz_frame_id>laser_link</gz_frame_id>
             <lidar>
                 <scan>
                     <horizontal>
@@ -61,6 +54,5 @@
             </lidar>
         </sensor>
     </gazebo>
-    
 
 </robot>
