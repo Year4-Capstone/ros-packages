@@ -34,7 +34,7 @@ def generate_launch_description():
     # Must match the topic your controller expects (check controller config)
     cmd_vel_topic_arg = DeclareLaunchArgument(
         'cmd_vel_topic',
-        default_value='/diff_drive_base_controller/cmd_vel',
+        default_value='/cmd_vel_gamepad_stamped',
         description='Topic to remap /cmd_vel to'
     )
 

@@ -1,0 +1,13 @@
+twist_mux:
+  ros__parameters:
+    topics:
+      gamepad:
+        topic   : cmd_vel_gamepad_stamped
+        timeout : 0.5
+        priority: 100  # Highest priority
+      navigation:
+        topic   : cmd_vel_nav_stamped
+        timeout : 1.0
+        priority: 10   # Lower priority
+    
+    use_stamped: true
