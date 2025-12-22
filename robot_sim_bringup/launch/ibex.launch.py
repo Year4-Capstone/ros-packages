@@ -9,10 +9,6 @@ from launch_ros.actions import SetRemap
 
 
 def generate_launch_description():
-
-    # =========================
-    # Package paths
-    # =========================
     pkg_robot_description = FindPackageShare('robot_sim_description')
     pkg_robot_bringup = FindPackageShare('robot_sim_bringup')
 
@@ -33,26 +29,14 @@ def generate_launch_description():
     )
 
     rviz_config_path = PathJoinSubstitution(
-        [pkg_robot_description, 'rviz', 'ibex.rviz']
+        [pkg_robot_description, 'rviz', 'ibex_nav2.rviz']
     )
 
-    # =========================
-    # Gazebo
-    # =========================
     gazebo_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_path),
-        launch_arguments={
-            'world': PathJoinSubstitution([
-                pkg_robot_description,
-                'world',
-                'small_house.world'
-            ])
-        }.items()
+        launch_arguments={'use_sim_time': 'true'}.items()
     )
 
-    # =========================
-    # RViz
-    # =========================
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -61,9 +45,6 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    # =========================
-    # ROS 2 Control
-    # =========================
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -82,9 +63,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # =========================
-    # Ground truth pose (Gazebo)
-    # =========================
     gz_gt_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -101,12 +79,8 @@ def generate_launch_description():
         output='screen'
     )
 
-    # =========================
-    # Nav2 (MANUAL bringup)
-    # =========================
+    # TODO: Abstract this to a seperate package
     nav2_launch = GroupAction(actions=[
-
-        # --- Map ---
         Node(
             package='nav2_map_server',
             executable='map_server',
@@ -115,7 +89,6 @@ def generate_launch_description():
             parameters=[nav2_cfg('map_server.yaml')],
         ),
 
-        # --- AMCL ---
         Node(
             package='nav2_amcl',
             executable='amcl',
@@ -124,7 +97,6 @@ def generate_launch_description():
             parameters=[nav2_cfg('amcl.yaml')],
         ),
 
-        # --- Planner ---
         Node(
             package='nav2_planner',
             executable='planner_server',
@@ -136,7 +108,6 @@ def generate_launch_description():
             ],
         ),
 
-        # --- Controller ---
         Node(
             package='nav2_controller',
             executable='controller_server',
@@ -151,7 +122,6 @@ def generate_launch_description():
             ],
         ),
 
-        # --- Behaviors ---
         Node(
             package='nav2_behaviors',
             executable='behavior_server',
@@ -160,7 +130,6 @@ def generate_launch_description():
             parameters=[nav2_cfg('behavior_server.yaml')],
         ),
 
-        # --- BT Navigator ---
         Node(
             package='nav2_bt_navigator',
             executable='bt_navigator',
@@ -169,7 +138,6 @@ def generate_launch_description():
             parameters=[nav2_cfg('bt_navigator.yaml')],
         ),
 
-        # --- Lifecycle Manager ---
         Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -190,9 +158,6 @@ def generate_launch_description():
         ),
     ])
 
-    # =========================
-    # Launch description
-    # =========================
     return LaunchDescription([
         gazebo_sim,
         gz_gt_bridge,
