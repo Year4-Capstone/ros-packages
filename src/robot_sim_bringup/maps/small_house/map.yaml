@@ -1,4 +1,4 @@
-image: /home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/small_house/map.pgm
+image: map.pgm
 resolution: 0.050000
 origin: [-12.500000, -12.500000, 0.000000]
 negate: 0
