@@ -6,6 +6,8 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import SetRemap
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
@@ -32,9 +34,27 @@ def generate_launch_description():
         [pkg_robot_description, 'rviz', 'ibex_nav2.rviz']
     )
 
+    world_name_arg = DeclareLaunchArgument(
+        'world_name',
+        default_value='cave_world.world'
+        # default_value='small_house.world'
+    )
+
+    map_name_arg = DeclareLaunchArgument(
+        'map_name',
+        default_value='cave_world'
+        # default_value='small_house'
+    )
+
+    world_name = LaunchConfiguration('world_name')
+    map_name   = LaunchConfiguration('map_name')
+
     gazebo_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_path),
-        launch_arguments={'use_sim_time': 'true'}.items()
+        launch_arguments={
+            'use_sim_time': 'true',
+            'world_name': world_name,
+        }.items()
     )
 
     rviz_node = Node(
@@ -82,8 +102,7 @@ def generate_launch_description():
     map_yaml = PathJoinSubstitution([
         FindPackageShare('robot_sim_bringup'),
         'maps',
-        # 'cave_world',
-        'small_house',
+        map_name,
         'map.yaml'
     ])
 
@@ -170,6 +189,8 @@ def generate_launch_description():
     ])
 
     return LaunchDescription([
+        world_name_arg,
+        map_name_arg,
         gazebo_sim,
         gz_gt_bridge,
         gt_extractor_node,

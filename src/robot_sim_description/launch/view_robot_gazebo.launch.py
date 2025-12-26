@@ -6,107 +6,97 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_path
 from launch.substitutions import PathJoinSubstitution, Command, LaunchConfiguration
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import TextSubstitution
+from launch_ros.substitutions import FindPackageShare
+from launch.actions import AppendEnvironmentVariable
+from launch.actions import GroupAction
 
 def generate_launch_description():
+    world_name_arg = DeclareLaunchArgument(
+        'world_name',
+        default_value='cave_world.world',
+        description='World name (must match worlds/<name>.world and models/<name>/)'
+    )
+
+    world_name = LaunchConfiguration('world_name')
 
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-    gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
+    gz_launch_path = PathJoinSubstitution([
+        pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'
+    ])
 
-    # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'cave_world.world')
-    world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'small_house.world')
-    # world_path = os.path.join(get_package_share_path('robot_sim_description'), 'world', 'empty_world.sdf')
-    #urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'ibex.urdf.xacro')
-    urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
+    pkg_desc = get_package_share_directory('robot_sim_description')
 
-    # Get the package share directory for meshes
-    # TODO UNCOMMENT THIS OR FIX UP HOW THIS IS DONE
-    # package_share_dir = get_package_share_directory('robot_sim_description')
-    # robot_sim_description_parent_path = os.path.dirname(package_share_dir)
-    # world_dir = os.path.join(package_share_dir, 'world')
-    # combined_resource_path = f"{robot_sim_description_parent_path}:{world_dir}"
-    
-    # aws_models_path = os.path.expanduser("~/aws_models/models")
+    world_path = PathJoinSubstitution([
+        pkg_desc,
+        'worlds',
+        world_name
+    ])
 
-    # default_paths = [
-    #     aws_models_path,
-    #     os.path.expanduser("~/.gz/models"),
-    #     "/usr/share/gz/models",
-    # ]
+    urdf_path = os.path.join(
+        pkg_desc, 'urdf', 'cad_urdf.urdf.xacro'
+    )
 
-    # combined = ":".join(default_paths + [combined_resource_path])
-
-    # set_gz_resource_path = SetEnvironmentVariable(
-    #     name='GZ_SIM_RESOURCE_PATH',
-    #     value=combined
-    # )
-
-    package_share_dir = get_package_share_directory('robot_sim_description')
-    package_parent_dir = os.path.dirname(package_share_dir)
-    world_models_dir = os.path.join(package_share_dir, 'world', 'models')
-    aws_root = os.path.expanduser("~/aws_models")
-
-    set_gz_resource_path = SetEnvironmentVariable(
+    set_gz_resource_path = AppendEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
-        value=":".join([
-            world_models_dir,     # model://cave_world, backpack, etc
-            aws_root,       # file://models/aws_robomaker_*
-            package_parent_dir,   # package://robot_sim_description/*
-            os.path.expanduser("~/.gz/models"),
-            "/usr/share/gz/models",
+        value=PathJoinSubstitution([
+            FindPackageShare('robot_sim_description'),
+            'models'
         ])
     )
 
-    robot_description_content = Command(
-        [
-            'xacro ', urdf_path,
-            ' use_gazebo:=true' 
-        ]
-    )
-    robot_description = {'robot_description': robot_description_content}
+    robot_description = {
+        'robot_description': Command([
+            'xacro ', urdf_path, ' use_gazebo:=true'
+        ])
+    }
 
     gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(gz_launch_path),
-                launch_arguments={
-                    "gz_args": ['-r -v 4 ', world_path]
-                }.items()
-             )
+        PythonLaunchDescriptionSource(gz_launch_path),
+        launch_arguments={
+            'gz_args': ['-r -v 4 ', world_path]
+        }.items()
+    )
+
+    gazebo_group = GroupAction([
+        set_gz_resource_path,
+        gazebo,
+    ])
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        output='screen',
-        parameters=[robot_description]
+        parameters=[robot_description],
+        output='screen'
     )
 
-    
-    # Spawns the robot model into the running Gazebo simulation
-    gazebo_spawn_entity_node = Node(
+    spawn_node = Node(
         package='ros_gz_sim',
         executable='create',
-        output='screen',
         arguments=[
             '-name', 'ibex_robot',
-            '-topic', 'robot_description', # Reads the URDF from the parameter set above
-            '-x', '0', '-y', '0', '-z', '0.5' # Initial pose
-        ]
+            '-topic', 'robot_description',
+            '-x', '0', '-y', '0', '-z', '0.5'
+        ],
+        output='screen'
     )
-    
+
     bridge_node = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
             '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan' 
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan'
         ],
         output='screen'
     )
 
-    # Create the final launch description
     return LaunchDescription([
-        set_gz_resource_path, 
-        gazebo,
+        world_name_arg,
+        gazebo_group,
         robot_state_publisher_node,
-        gazebo_spawn_entity_node,
-        bridge_node
+        spawn_node,
+        bridge_node,
     ])
