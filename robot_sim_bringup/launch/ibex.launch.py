@@ -30,11 +30,25 @@ def generate_launch_description():
 
     rviz_config_path = PathJoinSubstitution(
         [pkg_robot_description, 'rviz', 'ibex_nav2.rviz']
+        # [pkg_robot_description, 'rviz', 'ibex.rviz']
     )
 
     gazebo_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_path),
         launch_arguments={'use_sim_time': 'true'}.items()
+    )
+
+    slam_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('slam_toolbox'),
+            '/launch/online_async_launch.py'
+        ]),
+        launch_arguments={
+            'use_sim_time': 'true',
+            'params_file': PathJoinSubstitution([
+                pkg_robot_bringup, 'config', 'slam_params.yaml'
+            ])
+        }.items()
     )
 
     rviz_node = Node(
@@ -79,8 +93,26 @@ def generate_launch_description():
         output='screen'
     )
 
+    # map_yaml = PathJoinSubstitution([
+    #     FindPackageShare('robot_sim_bringup'),
+    #     'maps',
+    #     'cave_world',
+    #     # 'small_house',
+    #     'map.yaml'
+    # ])
+
     # TODO: Abstract this to a seperate package
     nav2_launch = GroupAction(actions=[
+        # Node(
+        #     package='nav2_map_server',
+        #     executable='map_server',
+        #     name='map_server',
+        #     output='screen',
+        #     parameters=[{
+        #         'use_sim_time': True,
+        #         'yaml_filename': map_yaml,
+        #     }],
+        # ),
         Node(
             package='nav2_map_server',
             executable='map_server',
@@ -88,7 +120,7 @@ def generate_launch_description():
             output='screen',
             parameters=[nav2_cfg('map_server.yaml')],
         ),
-
+        
         Node(
             package='nav2_amcl',
             executable='amcl',
@@ -159,6 +191,7 @@ def generate_launch_description():
     ])
 
     return LaunchDescription([
+        # slam_launch,
         gazebo_sim,
         gz_gt_bridge,
         gt_extractor_node,

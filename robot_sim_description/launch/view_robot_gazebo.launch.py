@@ -19,24 +19,41 @@ def generate_launch_description():
     urdf_path = os.path.join(get_package_share_path('robot_sim_description'), 'urdf', 'cad_urdf.urdf.xacro')
 
     # Get the package share directory for meshes
-    package_share_dir = get_package_share_directory('robot_sim_description')
-    robot_sim_description_parent_path = os.path.dirname(package_share_dir)
-    world_dir = os.path.join(package_share_dir, 'world')
-    combined_resource_path = f"{robot_sim_description_parent_path}:{world_dir}"
+    # TODO UNCOMMENT THIS OR FIX UP HOW THIS IS DONE
+    # package_share_dir = get_package_share_directory('robot_sim_description')
+    # robot_sim_description_parent_path = os.path.dirname(package_share_dir)
+    # world_dir = os.path.join(package_share_dir, 'world')
+    # combined_resource_path = f"{robot_sim_description_parent_path}:{world_dir}"
     
-    aws_models_path = os.path.expanduser("~/aws_models/models")
+    # aws_models_path = os.path.expanduser("~/aws_models/models")
 
-    default_paths = [
-        aws_models_path,
-        os.path.expanduser("~/.gz/models"),
-        "/usr/share/gz/models",
-    ]
+    # default_paths = [
+    #     aws_models_path,
+    #     os.path.expanduser("~/.gz/models"),
+    #     "/usr/share/gz/models",
+    # ]
 
-    combined = ":".join(default_paths + [combined_resource_path])
+    # combined = ":".join(default_paths + [combined_resource_path])
+
+    # set_gz_resource_path = SetEnvironmentVariable(
+    #     name='GZ_SIM_RESOURCE_PATH',
+    #     value=combined
+    # )
+
+    package_share_dir = get_package_share_directory('robot_sim_description')
+    package_parent_dir = os.path.dirname(package_share_dir)
+    world_models_dir = os.path.join(package_share_dir, 'world', 'models')
+    aws_root = os.path.expanduser("~/aws_models")
 
     set_gz_resource_path = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
-        value=combined
+        value=":".join([
+            world_models_dir,     # model://cave_world, backpack, etc
+            aws_root,       # file://models/aws_robomaker_*
+            package_parent_dir,   # package://robot_sim_description/*
+            os.path.expanduser("~/.gz/models"),
+            "/usr/share/gz/models",
+        ])
     )
 
     robot_description_content = Command(
