@@ -30,25 +30,11 @@ def generate_launch_description():
 
     rviz_config_path = PathJoinSubstitution(
         [pkg_robot_description, 'rviz', 'ibex_nav2.rviz']
-        # [pkg_robot_description, 'rviz', 'ibex.rviz']
     )
 
     gazebo_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gazebo_launch_path),
         launch_arguments={'use_sim_time': 'true'}.items()
-    )
-
-    slam_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            FindPackageShare('slam_toolbox'),
-            '/launch/online_async_launch.py'
-        ]),
-        launch_arguments={
-            'use_sim_time': 'true',
-            'params_file': PathJoinSubstitution([
-                pkg_robot_bringup, 'config', 'slam_params.yaml'
-            ])
-        }.items()
     )
 
     rviz_node = Node(
@@ -191,7 +177,6 @@ def generate_launch_description():
     ])
 
     return LaunchDescription([
-        # slam_launch,
         gazebo_sim,
         gz_gt_bridge,
         gt_extractor_node,
