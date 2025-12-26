@@ -79,34 +79,26 @@ def generate_launch_description():
         output='screen'
     )
 
-    # map_yaml = PathJoinSubstitution([
-    #     FindPackageShare('robot_sim_bringup'),
-    #     'maps',
-    #     'cave_world',
-    #     # 'small_house',
-    #     'map.yaml'
-    # ])
+    map_yaml = PathJoinSubstitution([
+        FindPackageShare('robot_sim_bringup'),
+        'maps',
+        'cave_world',
+        'map.yaml'
+    ])
 
     # TODO: Abstract this to a seperate package
     nav2_launch = GroupAction(actions=[
-        # Node(
-        #     package='nav2_map_server',
-        #     executable='map_server',
-        #     name='map_server',
-        #     output='screen',
-        #     parameters=[{
-        #         'use_sim_time': True,
-        #         'yaml_filename': map_yaml,
-        #     }],
-        # ),
         Node(
             package='nav2_map_server',
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[nav2_cfg('map_server.yaml')],
+            parameters=[
+                nav2_cfg('map_server.yaml'),
+                {'yaml_filename': map_yaml},
+            ],
         ),
-        
+
         Node(
             package='nav2_amcl',
             executable='amcl',
