@@ -82,7 +82,8 @@ def generate_launch_description():
     map_yaml = PathJoinSubstitution([
         FindPackageShare('robot_sim_bringup'),
         'maps',
-        'cave_world',
+        # 'cave_world',
+        'small_house',
         'map.yaml'
     ])
 
