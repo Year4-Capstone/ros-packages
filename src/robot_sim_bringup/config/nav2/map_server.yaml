@@ -1,5 +1,5 @@
 map_server:
   ros__parameters:
     use_sim_time: true
-    yaml_filename: /home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/small_house/map.yaml
-    # yaml_filename: /home/luke/Projects/capstone/search-support-robots/ros-packages/robot_sim_bringup/maps/cave_world/map.yaml
+    # yaml_filename: /home/luke/Projects/capstone/search-support-robots/ros2_ws/src/robot_sim_bringup/maps/small_house/map.yaml
+    yaml_filename: /home/luke/Projects/capstone/search-support-robots/ros2_ws/src/robot_sim_bringup/maps/cave_world/map.yaml
